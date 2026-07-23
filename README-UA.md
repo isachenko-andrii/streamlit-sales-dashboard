@@ -10,6 +10,8 @@
 ## Опис проєкту  
   
 Інтерактивний аналітичний дашборд для дослідження продажів, прибутковості та ефективності дисконтної політики роздрібної мережі (Superstore Dataset).  
+
+**Live Demo:** [Sales & Profit Analytics Dashboard](https://sales-and-profit-dashboard.streamlit.app/)  
   
 ## Мета проекту  
     
