@@ -40,7 +40,7 @@
     ├── LICENSE — MIT License  
     ├── project-logo.png — обкладинка проекту  
     ├── README-UA.md  — опис проекту  
-    └── README.md — опис проекту  
+    └── README.md — опис проекту    
   
 ## Як використовувати  
   
