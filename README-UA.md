@@ -61,11 +61,15 @@
 2. Створення Git-репозиторію та публікація коду на GitHub.  
 3. Документування проекту у файлі `README.md`.  
   
+![Publishing on Streamlit](https://github.com/isachenko-andrii/streamlit-sales-dashboard/raw/main/img/ssd_2.png)  
+  
 ### Етап 3: Публікація та деплой на Streamlit.io
   
 1. Підключення GitHub-репозиторію до платформи **Streamlit Community Cloud**.  
 2. Налаштування автоматичного деплою (CI/CD): додаток автоматично оновлюється при кожному новому комміті в гілку `main`.  
 3. Перевірка стабільності роботи та коректності відображення візуалізацій у хмарі.  
+
+![Hosting on GitHub](https://github.com/isachenko-andrii/streamlit-sales-dashboard/raw/main/img/ssd_3.png) 
   
 ---  
  
