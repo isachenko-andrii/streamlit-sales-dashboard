@@ -44,7 +44,7 @@ df_raw = load_data(DATA_PATH)
 # ----------------------------------------------------------------------
 # 3. БІЧНА ПАНЕЛЬ - ФІЛЬТРИ
 # ----------------------------------------------------------------------
-st.sidebar.header("Фильтры")
+st.sidebar.header("Фильтри")
 
 min_date, max_date = df_raw["Order Date"].min(), df_raw["Order Date"].max()
 date_range = st.sidebar.date_input(
