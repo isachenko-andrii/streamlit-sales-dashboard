@@ -1,0 +1,239 @@
+"""
+Аналітичний дашборд продажів (Superstore Dataset).
+Запуск локально: streamlit run app.py
+"""
+
+import pandas as pd
+import plotly.express as px
+import streamlit as st
+
+# ----------------------------------------------------------------------
+# 1. НАЛАШТУВАННЯ СТОРІНКИ
+# ----------------------------------------------------------------------
+st.set_page_config(
+    page_title="Аналітика продажів Superstore",
+    page_icon="📊",
+    layout="wide",
+)
+
+DATA_PATH = "data/superstore.csv"
+
+
+# ----------------------------------------------------------------------
+# 2. ЗАВАНТАЖЕННЯ І ПІДГОТОВКА ДАНИХ (з кешуванням)
+# ----------------------------------------------------------------------
+@st.cache_data
+def load_data(path: str) -> pd.DataFrame:
+    df = pd.read_csv(path, encoding="latin-1")
+
+   # Kaggle-версії датасета іноді відрізняються регістром/пробілами в назвах колонок
+    df.columns = [c.strip() for c in df.columns]
+
+    df["Order Date"] = pd.to_datetime(df["Order Date"])
+    df["Ship Date"] = pd.to_datetime(df["Ship Date"])
+
+    df["Year"] = df["Order Date"].dt.year
+    df["Month"] = df["Order Date"].dt.to_period("M").astype(str)
+    df["Delivery Days"] = (df["Ship Date"] - df["Order Date"]).dt.days
+
+    return df
+
+
+df_raw = load_data(DATA_PATH)
+
+# ----------------------------------------------------------------------
+# 3. БІЧНА ПАНЕЛЬ - ФІЛЬТРИ
+# ----------------------------------------------------------------------
+st.sidebar.header("Фильтры")
+
+min_date, max_date = df_raw["Order Date"].min(), df_raw["Order Date"].max()
+date_range = st.sidebar.date_input(
+    "Період замовлень",
+    value=(min_date, max_date),
+    min_value=min_date,
+    max_value=max_date,
+)
+
+regions = st.sidebar.multiselect(
+    "Регіон", options=sorted(df_raw["Region"].unique()), default=sorted(df_raw["Region"].unique())
+)
+
+categories = st.sidebar.multiselect(
+    "Категорія", options=sorted(df_raw["Category"].unique()), default=sorted(df_raw["Category"].unique())
+)
+
+segments = st.sidebar.multiselect(
+    "Сегмент клієнтів", options=sorted(df_raw["Segment"].unique()), default=sorted(df_raw["Segment"].unique())
+)
+
+# Застосовуємо фільтри
+if len(date_range) == 2:
+    start, end = pd.to_datetime(date_range[0]), pd.to_datetime(date_range[1])
+else:
+    start, end = min_date, max_date
+
+df = df_raw[
+    (df_raw["Order Date"] >= start)
+    & (df_raw["Order Date"] <= end)
+    & (df_raw["Region"].isin(regions))
+    & (df_raw["Category"].isin(categories))
+    & (df_raw["Segment"].isin(segments))
+]
+
+st.sidebar.markdown("---")
+st.sidebar.caption(f"Відфільтровано рядків: **{len(df):,}** з {len(df_raw):,}")
+
+# ----------------------------------------------------------------------
+# 4. ЗАГОЛОВОК
+# ----------------------------------------------------------------------
+st.title("📊 Аналітичний дашборд продажів")
+st.caption(
+    "Датасет: Superstore Sales (Kaggle). "
+    "Використовуйте фільтри зліва, щоб змінювати період, регіон, категорію та сегмент клієнтів."
+)
+
+if df.empty:
+    st.warning("За вибраними фільтрами немає даних. Змініть умови фільтрації.")
+    st.stop()
+
+# ----------------------------------------------------------------------
+# 5. KPI-БЛОК
+# ----------------------------------------------------------------------
+total_sales = df["Sales"].sum()
+total_profit = df["Profit"].sum()
+total_orders = df["Order ID"].nunique()
+avg_order_value = total_sales / total_orders if total_orders else 0
+margin_pct = (total_profit / total_sales * 100) if total_sales else 0
+
+col1, col2, col3, col4, col5 = st.columns(5)
+col1.metric("Виторг", f"${total_sales:,.0f}")
+col2.metric("Прибуток", f"${total_profit:,.0f}")
+col3.metric("Замовлень", f"{total_orders:,}")
+col4.metric("Середній чек", f"${avg_order_value:,.0f}")
+col5.metric("Маржинальність", f"{margin_pct:.1f}%")
+
+st.markdown("---")
+
+# ----------------------------------------------------------------------
+# 6. ДИНАМІКА ПРОДАЖІВ У ЧАСІ
+# ----------------------------------------------------------------------
+st.subheader("Динаміка продажу та прибутку по місяцях")
+
+monthly = (
+    df.groupby("Month")[["Sales", "Profit"]]
+    .sum()
+    .reset_index()
+    .sort_values("Month")
+)
+
+fig_trend = px.line(
+    monthly,
+    x="Month",
+    y=["Sales", "Profit"],
+    labels={"value": "Сума, $", "Month": "Місяць", "variable": "Показник"},
+    markers=True,
+)
+fig_trend.update_layout(hovermode="x unified", legend_title_text="")
+st.plotly_chart(fig_trend, use_container_width=True)
+
+# ----------------------------------------------------------------------
+# 7. РОЗБИВАННЯ ПО КАТЕГОРІЯМ І РЕГІОНАМ
+# ----------------------------------------------------------------------
+col_left, col_right = st.columns(2)
+
+with col_left:
+    st.subheader("Продаж за категоріями")
+    cat_data = df.groupby("Category")[["Sales", "Profit"]].sum().reset_index()
+    fig_cat = px.bar(
+        cat_data.sort_values("Sales", ascending=True),
+        x="Sales",
+        y="Category",
+        orientation="h",
+        text_auto=".2s",
+        color="Profit",
+        color_continuous_scale="RdYlGn",
+        labels={"Sales": "Выручка, $", "Category": ""},
+    )
+    st.plotly_chart(fig_cat, use_container_width=True)
+
+with col_right:
+    st.subheader("Продаж по регіонах")
+    region_data = df.groupby("Region")["Sales"].sum().reset_index()
+    fig_region = px.pie(
+        region_data,
+        names="Region",
+        values="Sales",
+        hole=0.45,
+    )
+    fig_region.update_traces(textinfo="percent+label")
+    st.plotly_chart(fig_region, use_container_width=True)
+
+# ----------------------------------------------------------------------
+# 8. ТОП ТОВАРІВ І ПІДКАТЕГОРІЙ
+# ----------------------------------------------------------------------
+st.subheader("Топ-10 підкатегорій за прибутком")
+
+sub_data = (
+    df.groupby("Sub-Category")[["Sales", "Profit"]]
+    .sum()
+    .reset_index()
+    .sort_values("Profit", ascending=False)
+)
+
+fig_sub = px.bar(
+    sub_data.head(10),
+    x="Sub-Category",
+    y="Profit",
+    color="Profit",
+    color_continuous_scale="RdYlGn",
+    labels={"Sub-Category": "Підкатегорія", "Profit": "Прибуток, $"},
+)
+st.plotly_chart(fig_sub, use_container_width=True)
+
+if (sub_data["Profit"] < 0).any():
+    losing = sub_data[sub_data["Profit"] < 0]["Sub-Category"].tolist()
+    st.info(
+        "⚠️ Підкатегорії з негативним прибутком у вибраному періоді: "
+        + ", ".join(losing)
+        + ". Варто перевірити рівень знижок за цими позиціями."
+    )
+
+# ----------------------------------------------------------------------
+# 9. ЗНИЖКИ VS ПРИБУТОК
+# ----------------------------------------------------------------------
+st.subheader("Вплив знижки на прибуток")
+
+fig_scatter = px.scatter(
+    df.sample(min(1500, len(df)), random_state=1),
+    x="Discount",
+    y="Profit",
+    color="Category",
+    size="Sales",
+    opacity=0.6,
+    labels={"Discount": "Знижка", "Profit": "Прибуток, $"},
+)
+st.plotly_chart(fig_scatter, use_container_width=True)
+
+corr = df["Discount"].corr(df["Profit"])
+st.caption(f"Коефіцієнт кореляції між знижкою та прибутком: **{corr:.2f}**")
+
+# ----------------------------------------------------------------------
+# 10.ТАБЛИЦЯ З ДАНИМИ + ВИВАНТАЖЕННЯ
+# ----------------------------------------------------------------------
+st.markdown("---")
+st.subheader("Детальні дані")
+
+with st.expander("Показати таблицю відфільтрованих даних"):
+    st.dataframe(
+        df.sort_values("Order Date", ascending=False),
+        use_container_width=True,
+        height=400,
+    )
+
+    csv_bytes = df.to_csv(index=False).encode("utf-8")
+    st.download_button(
+        label="⬇️ Завантажити відфільтровані дані (CSV)",
+        data=csv_bytes,
+        file_name="superstore_filtered.csv",
+        mime="text/csv",
+    )
