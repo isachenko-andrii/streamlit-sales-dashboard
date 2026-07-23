@@ -30,7 +30,7 @@
   
 ## Структура проекту
 
-**streamlit-sales-dashboard//** — каталог проєкту  
+**streamlit-sales-dashboard/** — каталог проєкту  
     ├── data/ — дані проєкту  
     ├── img/ — збережені графіки та підсумкові таблиці  
     ├── app.py — файл з кодом проэкту  
@@ -39,7 +39,7 @@
     ├── .gitignore - шаблони ігнорування git  
     ├── LICENSE — MIT License  
     ├── project-logo.png — обкладинка проекту  
-    ├── README-UA.md  — опис проекту 
+    ├── README-UA.md  — опис проекту  
     └── README.md — опис проекту  
   
 ## Як використовувати  
