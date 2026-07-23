@@ -73,11 +73,11 @@
     ├── app.py — файл з кодом проэкту  
     ├── requirements.txt — список бібліотек для запуску проєкту  
     ├── runtime.txt — .версія Python для Streamlit Cloud  
-    ├── .gitignore - шаблони ігнорування git  
-    ├── LICENSE — MIT License  
+    ├── gitignore - шаблони ігнорування git  
+    ├── LICENSE — MIT Ліцензія   
     ├── project-logo.png — обкладинка проекту  
-    ├── README-UA.md  — опис проекту  
-    └── README.md — опис проекту    
+    ├── README-UA.md  — опис проекту українською мовою   
+    └── README.md — опис проекту англійською мовою     
   
 ## Як використовувати  
   
