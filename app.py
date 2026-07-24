@@ -463,7 +463,6 @@ with tab_top:
         if (sub_data["Profit"] < 0).any():
             losing = sub_data[sub_data["Profit"] < 0]["Sub-Category"].tolist()
             st.info(T["losing_prefix"] + ", ".join(losing) + T["losing_suffix"])
-            )
 
 # --- UA: Таб 5: Знижки vs прибуток ---------------------------------------------
 # --- EN: Tab 5: Discounts vs profit --------------------------------------------
