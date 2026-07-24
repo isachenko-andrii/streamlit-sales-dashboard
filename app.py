@@ -150,9 +150,11 @@ st.markdown(
         align-items: center;
         justify-content: center;
     }}
-    </style>    <div class="dashboard-header">
+    </style> 
+    
+    <div class="dashboard-header">
         <h1>📊 Аналитический дашборд продаж</h1>
-        <p>Датасет: Superstore Sales (Kaggle). Используй фильтры слева, чтобы менять период, регион, категорию и сегмент клиентов.</p>
+        <p>Датасет: Superstore Sales (Kaggle). Используйте фильтры слева, чтобы менять период, регион, категорию и сегмент клиентов.</p>
     </div>
     """,
     unsafe_allow_html=True,
