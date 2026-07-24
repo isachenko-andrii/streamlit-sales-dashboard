@@ -160,7 +160,11 @@ total_profit = df["Profit"].sum()
 total_orders = df["Order ID"].nunique()
 avg_order_value = total_sales / total_orders if total_orders else 0
 margin_pct = (total_profit / total_sales * 100) if total_sales else 0
-avg_delivery_days = df["Delivery Days"].mean()
+# Доля прибыльных заказов считается на уровне заказа (Order ID),
+# т.к. один заказ может включать несколько товарных позиций —
+# суммируем прибыль по заказу и проверяем, положительная ли она
+order_profit = df.groupby("Order ID")["Profit"].sum()
+profitable_orders_pct = (order_profit > 0).mean() * 100 if len(order_profit) else 0
 
 # ----------------------------------------------------------------------
 # 6. ДИНАМІКА ПРОДАЖІВ У ЧАСІ
@@ -205,7 +209,7 @@ with tab_kpi:
                 st.metric("Маржинальность", f"{margin_pct:.1f}%")
         with row2[2]:
             with st.container(border=True):
-                st.metric("Ср. срок доставки", f"{avg_delivery_days:.1f} дн.")
+                st.metric("Доля прибыльных заказов", f"{profitable_orders_pct:.1f}%")
 
         st.markdown('</div>', unsafe_allow_html=True)
 
