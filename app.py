@@ -95,16 +95,21 @@ st.markdown(
         padding-top: 1.2rem;
     }}
 
-    /* заголовок + подпись — липнут к самому верху */
-    :root {
+    /* высота встроенной панели Streamlit (Share / ⭐ / ✏️ / GitHub) —
+       заголовок должен прилипать НИЖЕ неё, а не к самому верху окна */
+    :root {{
         --stheader-height: 2.875rem;
-    }
-    .dashboard-header {
-        top: var(--stheader-height);   /* прилипает НИЖЕ панели Streamlit */
-    }
-    div[data-testid="stTabs"] > div:first-child {
-        top: calc(var(--stheader-height) + 3.6rem);  /* высота панели + высота заголовка */
-    }
+    }}
+
+    /* заголовок + подпись — липнут сразу под панелью Streamlit */
+    .dashboard-header {{
+        position: sticky;
+        top: var(--stheader-height);
+        background: {bg_color};
+        z-index: 999;
+        padding-top: 0.3rem;
+        padding-bottom: 0.3rem;
+    }}
     .dashboard-header h1 {{
         margin-bottom: 0.1rem;
         font-size: 1.9rem;
@@ -118,7 +123,7 @@ st.markdown(
     /* полоска вкладок — липнет сразу под заголовком */
     div[data-testid="stTabs"] > div:first-child {{
         position: sticky;
-        top: 3.6rem;   /* подстрой под фактическую высоту .dashboard-header, если появится нахлёст/зазор */
+        top: calc(var(--stheader-height) + 3.6rem);   /* подстрой второе слагаемое под фактическую высоту .dashboard-header, если появится нахлёст/зазор */
         background: {bg_color};
         z-index: 998;
         padding-top: 0.3rem;
@@ -142,7 +147,7 @@ st.markdown(
 )
 
 if df.empty:
-    st.warning("За вибраними фільтрами немає даних. Змініть умови фільтрації.")
+    st.warning("По выбранным фильтрам нет данных. Измени условия фильтрации.")
     st.stop()
 
 # ----------------------------------------------------------------------
