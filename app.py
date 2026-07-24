@@ -131,6 +131,7 @@ st.markdown(
 
     /* крупные KPI (глобально — st.metric больше нигде на дашборде не используется) */
     [data-testid="stMetricValue"] {{
+        margin-top: 14px;   /* сдвигает число вниз относительно подписи */
         font-size: 2.3rem;
         color: #1a73e8;
         font-weight: 500;
