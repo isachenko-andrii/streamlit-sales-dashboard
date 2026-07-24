@@ -422,9 +422,9 @@ with tab_breakdown:
             fig_cat.update_traces(
                 customdata=cat_data_sorted["Profit"],
                 hovertemplate=(
-                    f"{T['category_label']}=%{{y}}<br>"
-                    f"{T['cat_sales_label']}=%{{x:,.0f}}<br>"
-                    f"{T['kpi_profit']}=%{{customdata:,.0f}}<extra></extra>"
+                    f"{T['category_label']}:%{{y}}<br>"
+                    f"{T['cat_sales_label']}:%{{x:,.0f}}<br>"
+                    f"{T['kpi_profit']}:%{{customdata:,.0f}}<extra></extra>"
                 ),
             )
             st.plotly_chart(fig_cat, use_container_width=True)
