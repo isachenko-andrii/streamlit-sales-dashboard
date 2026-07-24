@@ -19,6 +19,7 @@ AUTHOR_URL = "https://www.linkedin.com/in/isachenko-andrii/"
 # 1. UA: НАЛАШТУВАННЯ СТОРІНКИ
 # 1. EN: PAGE SETTINGS
 # ----------------------------------------------------------------------
+
 st.set_page_config(
     page_title="Аналітика продажів та прибутку",
     page_icon="📊",
@@ -27,11 +28,11 @@ st.set_page_config(
 
 DATA_PATH = "data/superstore.csv"
 
-
 # ----------------------------------------------------------------------
 # 2. UA: ЗАВАНТАЖЕННЯ І ПІДГОТОВКА ДАНИХ (з кешуванням)
 # 2. EN: DATA LOADING AND PREPARATION (with caching)
 # ----------------------------------------------------------------------
+
 @st.cache_data
 def load_data(path: str) -> pd.DataFrame:
     df = pd.read_csv(path, encoding="latin-1")
@@ -50,13 +51,13 @@ def load_data(path: str) -> pd.DataFrame:
 
     return df
 
-
 df_raw = load_data(DATA_PATH)
 
 # ----------------------------------------------------------------------
 # 3. UA: БІЧНА ПАНЕЛЬ - ФІЛЬТРИ
 # 3. EN: SIDE PANEL - FILTERS
 # ----------------------------------------------------------------------
+
 st.sidebar.header("Фільтри")
 
 min_date, max_date = df_raw["Order Date"].min(), df_raw["Order Date"].max()
@@ -102,6 +103,7 @@ st.sidebar.caption(f"Відфільтровано рядків: **{len(df):,}** 
 # 4. UA: ЗАГОЛОВОК (sticky - прилипає до верху екрану разом зі смужкою табів)
 # 4. EN: TITLE (sticky - sticks to the top of the screen along with the tab strip)
 # ----------------------------------------------------------------------
+
 bg_color = st.get_option("theme.backgroundColor") or "#ffffff"
 
 st.markdown(
@@ -209,6 +211,7 @@ profitable_orders_pct = (order_profit > 0).mean() * 100 if len(order_profit) els
 # 6. ДИНАМІКА ПРОДАЖІВ У ЧАСІ
 # 6. SALES DYNAMICS OVER TIME
 # ----------------------------------------------------------------------
+
 TAB_HEIGHT = 520  # px — зменшено, щоб шапка + таб містилися в один екран
 
 tab_kpi, tab_trend, tab_breakdown, tab_top, tab_discount, tab_table = st.tabs(
