@@ -129,13 +129,13 @@ st.markdown(
         padding-top: 0.3rem;
     }}
 
-    /* крупные KPI на отдельном табе */
-    .kpi-tab [data-testid="stMetricValue"] {{
+     /* крупные KPI (глобально — st.metric больше нигде на дашборде не используется) */
+    [data-testid="stMetricValue"] {{
         font-size: 2.3rem;
         color: #1a73e8;
         font-weight: 700;
     }}
-    .kpi-tab [data-testid="stMetricLabel"] {{
+    [data-testid="stMetricLabel"] {{
         font-size: 1.05rem;
     }}
     </style>
@@ -183,6 +183,8 @@ tab_kpi, tab_trend, tab_breakdown, tab_top, tab_discount, tab_table = st.tabs(
 )
 
 # --- Таб KPI: крупные ключевые метрики --------------------------------
+KPI_BOX_HEIGHT = 150  # px — высота каждого блока-показателя; увеличь при желании
+
 with tab_kpi:
     with st.container(height=TAB_HEIGHT, border=False):
         st.markdown('<div class="kpi-tab">', unsafe_allow_html=True)
