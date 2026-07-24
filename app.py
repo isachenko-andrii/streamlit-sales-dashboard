@@ -158,6 +158,8 @@ total_profit = df["Profit"].sum()
 total_orders = df["Order ID"].nunique()
 avg_order_value = total_sales / total_orders if total_orders else 0
 margin_pct = (total_profit / total_sales * 100) if total_sales else 0
+avg_delivery_days = df["Delivery Days"].mean()
+
 # ----------------------------------------------------------------------
 # 6. ДИНАМІКА ПРОДАЖІВ У ЧАСІ
 # ----------------------------------------------------------------------
@@ -180,14 +182,28 @@ with tab_kpi:
         st.markdown('<div class="kpi-tab">', unsafe_allow_html=True)
 
         st.subheader("Ключевые показатели")
-        col1, col2 = st.columns(2)
-        col1.metric("Выручка", f"${total_sales:,.0f}")
-        col2.metric("Прибыль", f"${total_profit:,.0f}")
 
-        col3, col4, col5 = st.columns(3)
-        col3.metric("Заказов", f"{total_orders:,}")
-        col4.metric("Средний чек", f"${avg_order_value:,.0f}")
-        col5.metric("Маржинальность", f"{margin_pct:.1f}%")
+        row1 = st.columns(3)
+        with row1[0]:
+            with st.container(border=True):
+                st.metric("Выручка", f"${total_sales:,.0f}")
+        with row1[1]:
+            with st.container(border=True):
+                st.metric("Прибыль", f"${total_profit:,.0f}")
+        with row1[2]:
+            with st.container(border=True):
+                st.metric("Заказов", f"{total_orders:,}")
+
+        row2 = st.columns(3)
+        with row2[0]:
+            with st.container(border=True):
+                st.metric("Средний чек", f"${avg_order_value:,.0f}")
+        with row2[1]:
+            with st.container(border=True):
+                st.metric("Маржинальность", f"{margin_pct:.1f}%")
+        with row2[2]:
+            with st.container(border=True):
+                st.metric("Ср. срок доставки", f"{avg_delivery_days:.1f} дн.")
 
         st.markdown('</div>', unsafe_allow_html=True)
 
