@@ -183,7 +183,7 @@ tab_kpi, tab_trend, tab_breakdown, tab_top, tab_discount, tab_table = st.tabs(
 )
 
 # --- Таб KPI: крупные ключевые метрики --------------------------------
-KPI_BOX_HEIGHT = 150  # px — высота каждого блока-показателя; увеличь при желании
+KPI_BOX_HEIGHT = 180  # px — высота каждого блока-показателя; увеличь при желании
 
 with tab_kpi:
     with st.container(height=TAB_HEIGHT, border=False):
