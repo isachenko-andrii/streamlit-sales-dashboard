@@ -407,8 +407,9 @@ with tab_breakdown:
         with col_left:
             st.subheader(T["cat_title"])
             cat_data = df.groupby("Category")[["Sales", "Profit"]].sum().reset_index()
+            cat_data_sorted = cat_data.sort_values("Sales", ascending=True)
             fig_cat = px.bar(
-                cat_data.sort_values("Sales", ascending=True),
+                cat_data_sorted,
                 x="Sales",
                 y="Category",
                 orientation="h",
@@ -416,7 +417,15 @@ with tab_breakdown:
                 color="Profit",
                 color_continuous_scale="RdYlGn",
                 labels={"Sales": T["cat_sales_label"], "Category": ""},
-                height=400,
+                height=400
+            )
+            fig_cat.update_traces(
+                customdata=cat_data_sorted["Profit"],
+                hovertemplate=(
+                    f"{T['category_label']}=%{{y}}<br>"
+                    f"{T['cat_sales_label']}=%{{x:,.0f}}<br>"
+                    f"{T['kpi_profit']}=%{{customdata:,.0f}}<extra></extra>"
+                ),
             )
             st.plotly_chart(fig_cat, use_container_width=True)
 
@@ -428,10 +437,11 @@ with tab_breakdown:
                 names="Region",
                 values="Sales",
                 hole=0.45,
-                height=400,
+                height=400
             )
             fig_region.update_traces(textinfo="percent+label")
             st.plotly_chart(fig_region, use_container_width=True)
+
 
 # --- UA: Таб 4: Топ підкатегорій за прибутком-----------------------------------
 # --- EN: Tab 4: Top subcategories by revenue-----------------------------------
