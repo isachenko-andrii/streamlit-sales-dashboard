@@ -92,7 +92,7 @@ st.markdown(
     f"""
     <style>
     .block-container {{
-        padding-top: 2.4rem;
+        padding-top: 2.5rem;
     }}
 
     /* высота встроенной панели Streamlit (Share / ⭐ / ✏️ / GitHub) —
