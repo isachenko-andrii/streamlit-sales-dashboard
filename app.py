@@ -209,7 +209,7 @@ with tab_trend:
             y=["Sales", "Profit"],
             labels={"value": "Сума, $", "Month": "Місяць", "variable": "Показник"},
             markers=True,
-            height=300
+            height=350
         )
         fig_trend.update_layout(hovermode="x unified", legend_title_text="")
         st.plotly_chart(fig_trend, use_container_width=True)
@@ -231,7 +231,7 @@ with tab_breakdown:
                 color="Profit",
                 color_continuous_scale="RdYlGn",
                 labels={"Sales": "Выручка, $", "Category": ""},
-                height=300
+                height=350
             )
             st.plotly_chart(fig_cat, use_container_width=True)
 
@@ -243,7 +243,7 @@ with tab_breakdown:
                 names="Region",
                 values="Sales",
                 hole=0.45,
-                height=300
+                height=350
             )
             fig_region.update_traces(textinfo="percent+label")
             st.plotly_chart(fig_region, use_container_width=True)
@@ -267,7 +267,7 @@ with tab_top:
             color="Profit",
             color_continuous_scale="RdYlGn",
             labels={"Sub-Category": "Підкатегорія", "Profit": "Прибуток, $"},
-            height=300
+            height=350
         )
         st.plotly_chart(fig_sub, use_container_width=True)
 
@@ -292,7 +292,7 @@ with tab_discount:
             size="Sales",
             opacity=0.6,
             labels={"Discount": "Знижка", "Profit": "Прибуток, $"},
-            height=300
+            height=350
         )
         st.plotly_chart(fig_scatter, use_container_width=True)
 
