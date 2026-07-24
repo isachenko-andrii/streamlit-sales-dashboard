@@ -8,25 +8,140 @@ import plotly.express as px
 import streamlit as st
 
 # ----------------------------------------------------------------------
-# 0. UA: АВТОР
-# 0. EN: AUTHOR
+# 1. UA: АВТОР
+# 1. EN: AUTHOR
 # ----------------------------------------------------------------------
 
 AUTHOR_NAME = "Andrii Isachenko"
 AUTHOR_URL = "https://www.linkedin.com/in/isachenko-andrii/"
 
 # ----------------------------------------------------------------------
-# 1. UA: НАЛАШТУВАННЯ СТОРІНКИ
-# 1. EN: PAGE SETTINGS
+# 2. UA: НАЛАШТУВАННЯ СТОРІНКИ
+# 2. EN: PAGE SETTINGS
 # ----------------------------------------------------------------------
 
 st.set_page_config(
-    page_title="Аналітика продажів та прибутку",
+    page_title="Sales and Profit Analytics Dashboard",
     page_icon="📊",
     layout="wide",
 )
 
 DATA_PATH = "data/superstore.csv"
+
+# ----------------------------------------------------------------------
+# 3. СЛОВНИК ПЕРЕКЛАДІВ - Значення самих даних (Furniture, Consumer, East тощо) НЕ перекладаються — це фактичні значення з датасету.
+# 3. TRANSLATION DICTIONARY - The values ​​of the data themselves (Furniture, Consumer, East, etc.) are NOT translated — these are the actual values ​​from the dataset.
+# ----------------------------------------------------------------------
+
+TRANSLATIONS = {
+    "ua": {
+        "sidebar_header": "Фільтри",
+        "date_range_label": "Період замовлень",
+        "region_label": "Регіон",
+        "category_label": "Категорія",
+        "segment_label": "Сегмент клієнтів",
+        "filtered_rows": "Відфільтровано рядків",
+        "of_word": "з",
+        "dashboard_title": "📊 Аналітичний дашборд продажів",
+        "dashboard_caption": (
+            "Датасет: Superstore Sales (Kaggle). Використовуйте фільтри зліва, "
+            "щоб змінювати період, регіон, категорію та сегмент клієнтів."
+        ),
+        "empty_warning": "За обраними фільтрами немає даних. Змініть умови фільтрації.",
+        "tab_kpi": "🔢 KPI",
+        "tab_trend": "📈 Динаміка",
+        "tab_breakdown": "🗂️ Категорії та регіони",
+        "tab_top": "🏆 Топ підкатегорій",
+        "tab_discount": "💸 Знижки та прибуток",
+        "tab_table": "📋 Дані",
+        "kpi_title": "Ключові показники",
+        "kpi_revenue": "Виручка",
+        "kpi_profit": "Прибуток",
+        "kpi_orders": "Замовлень",
+        "kpi_aov": "Середній чек",
+        "kpi_margin": "Маржинальність",
+        "kpi_profitable_share": "Частка прибуткових замовлень",
+        "trend_title": "Динаміка продажу та прибутку по місяцях",
+        "trend_value_label": "Сума, $",
+        "trend_month_label": "Місяць",
+        "trend_legend_label": "Показник",
+        "cat_title": "Продаж за категоріями",
+        "cat_sales_label": "Виручка, $",
+        "region_title": "Продаж за регіонами",
+        "top_title": "Топ-10 підкатегорій за прибутком",
+        "top_subcat_label": "Підкатегорія",
+        "top_profit_label": "Прибуток, $",
+        "losing_prefix": "⚠️ Підкатегорії з негативним прибутком у вибраному періоді: ",
+        "losing_suffix": ". Варто перевірити рівень знижок за цими позиціями.",
+        "discount_title": "Вплив знижки на прибуток",
+        "discount_label": "Знижка",
+        "discount_profit_label": "Прибуток, $",
+        "corr_caption": "Коефіцієнт кореляції між знижкою та прибутком: ",
+        "table_title": "Детальні дані",
+        "download_button": "⬇️ Завантажити відфільтровані дані (CSV)",
+    },
+    "en": {
+        "sidebar_header": "Filters",
+        "date_range_label": "Order date range",
+        "region_label": "Region",
+        "category_label": "Category",
+        "segment_label": "Customer segment",
+        "filtered_rows": "Filtered rows",
+        "of_word": "of",
+        "dashboard_title": "📊 Sales Analytics Dashboard",
+        "dashboard_caption": (
+            "Dataset: Superstore Sales (Kaggle). Use the filters on the left "
+            "to change the period, region, category, and customer segment."
+        ),
+        "empty_warning": "No data matches the selected filters. Please adjust the filter conditions.",
+        "tab_kpi": "🔢 KPI",
+        "tab_trend": "📈 Trend",
+        "tab_breakdown": "🗂️ Categories & Regions",
+        "tab_top": "🏆 Top Sub-Categories",
+        "tab_discount": "💸 Discount & Profit",
+        "tab_table": "📋 Data",
+        "kpi_title": "Key Performance Indicators",
+        "kpi_revenue": "Revenue",
+        "kpi_profit": "Profit",
+        "kpi_orders": "Orders",
+        "kpi_aov": "Avg. Order Value",
+        "kpi_margin": "Profit Margin",
+        "kpi_profitable_share": "Share of Profitable Orders",
+        "trend_title": "Monthly Sales & Profit Trend",
+        "trend_value_label": "Amount, $",
+        "trend_month_label": "Month",
+        "trend_legend_label": "Metric",
+        "cat_title": "Sales by Category",
+        "cat_sales_label": "Revenue, $",
+        "region_title": "Sales by Region",
+        "top_title": "Top 10 Sub-Categories by Profit",
+        "top_subcat_label": "Sub-Category",
+        "top_profit_label": "Profit, $",
+        "losing_prefix": "⚠️ Sub-categories with negative profit in the selected period: ",
+        "losing_suffix": ". It may be worth reviewing the discount levels for these items.",
+        "discount_title": "Discount Impact on Profit",
+        "discount_label": "Discount",
+        "discount_profit_label": "Profit, $",
+        "corr_caption": "Correlation coefficient between discount and profit: ",
+        "table_title": "Detailed Data",
+        "download_button": "⬇️ Download filtered data (CSV)",
+    },
+}
+
+# ----------------------------------------------------------------------
+# 3. ПЕРЕМИКАЧ МОВИ (перший елемент бічної панелі)
+# 4. LANGUAGE SWITCH (first item in the sidebar)
+# ----------------------------------------------------------------------
+
+lang_choice = st.sidebar.radio(
+    "Мова / Language",
+    options=["Українська", "English"],
+    horizontal=True,
+)
+lang = "ua" if lang_choice == "Українська" else "en"
+T = TRANSLATIONS[lang]
+ 
+st.sidebar.markdown("---")
 
 # ----------------------------------------------------------------------
 # 2. UA: ЗАВАНТАЖЕННЯ І ПІДГОТОВКА ДАНИХ (з кешуванням)
