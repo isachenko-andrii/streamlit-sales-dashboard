@@ -395,3 +395,39 @@ with tab_table:
             use_container_width=True,
             height=TAB_HEIGHT - 140,
         )
+# ----------------------------------------------------------------------
+# 7. UA: ПЛАШКА З АВТОРСТВОМ (фіксована, справа знизу)
+# 7. EN: AUTHORITY PLAQUE (fixed, bottom right)
+# ----------------------------------------------------------------------
+st.markdown(
+    f"""
+    <style>
+    .author-badge {{
+        position: fixed;
+        bottom: 14px;
+        right: 18px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        padding: 6px 14px;
+        font-size: 0.8rem;
+        color: #444;
+        z-index: 1000;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    }}
+    .author-badge a {{
+        color: #1a73e8;
+        text-decoration: none;
+        font-weight: 600;
+    }}
+    .author-badge a:hover {{
+        text-decoration: underline;
+    }}
+    </style>
+
+    <div class="author-badge">
+        Created by <a href="{AUTHOR_URL}" target="_blank">{AUTHOR_NAME}</a>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
