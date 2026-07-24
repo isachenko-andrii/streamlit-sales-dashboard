@@ -342,33 +342,33 @@ tab_kpi, tab_trend, tab_breakdown, tab_top, tab_discount, tab_table = st.tabs(
 # --- UA: Таб 1 KPI: великі ключові метрики --------------------------------
 # --- UA: Tab 1 KPI: major key metrics -------------------------------------
 
-KPI_BOX_HEIGHT = 150  # px — висота кожного блоку-показника, можна збільшити за бажання
+KPI_BOX_HEIGHT = 150  # px — висота кожного блоку-показника; збільш за бажанням
 
 with tab_kpi:
     with st.container(height=TAB_HEIGHT, border=False):
-        st.subheader("Ключові показники ефективності")
+        st.subheader(T["kpi_title"])
 
         row1 = st.columns(3)
         with row1[0]:
             with st.container(border=True, height=KPI_BOX_HEIGHT):
-                st.metric("Виторг", f"${total_sales:,.0f}")
+                st.metric(T["kpi_revenue"], f"${total_sales:,.0f}")
         with row1[1]:
             with st.container(border=True, height=KPI_BOX_HEIGHT):
-                st.metric("Прибуток", f"${total_profit:,.0f}")
+                st.metric(T["kpi_profit"], f"${total_profit:,.0f}")
         with row1[2]:
             with st.container(border=True, height=KPI_BOX_HEIGHT):
-                st.metric("Замовлень", f"{total_orders:,}")
+                st.metric(T["kpi_orders"], f"{total_orders:,}")
 
         row2 = st.columns(3)
         with row2[0]:
             with st.container(border=True, height=KPI_BOX_HEIGHT):
-                st.metric("Середній чек", f"${avg_order_value:,.0f}")
+                st.metric(T["kpi_aov"], f"${avg_order_value:,.0f}")
         with row2[1]:
             with st.container(border=True, height=KPI_BOX_HEIGHT):
-                st.metric("Маржинальність", f"{margin_pct:.1f}%")
+                st.metric(T["kpi_margin"], f"{margin_pct:.1f}%")
         with row2[2]:
             with st.container(border=True, height=KPI_BOX_HEIGHT):
-                st.metric("Частка прибуткових замовлень", f"{profitable_orders_pct:.1f}%")
+                st.metric(T["kpi_profitable_share"], f"{profitable_orders_pct:.1f}%")
 
 # --- UA: Таб 2: Динаміка продажів у часі -----------------------------------
 # --- EN: Tab 2: Sales dynamics over time -----------------------------------
