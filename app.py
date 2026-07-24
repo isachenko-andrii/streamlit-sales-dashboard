@@ -167,7 +167,7 @@ lang_choice = st.sidebar.radio(
 lang = "ua" if lang_choice == "Українська" else "en"
 T = TRANSLATIONS[lang]
  
-st.sidebar.markdown("---")
+
 
 # ----------------------------------------------------------------------
 # UA: БІЧНА ПАНЕЛЬ - ФІЛЬТРИ
