@@ -216,8 +216,8 @@ st.sidebar.markdown("---")
 st.sidebar.caption(f"{T['filtered_rows']}: **{len(df):,}** {T['of_word']} {len(df_raw):,}")
 
 # ----------------------------------------------------------------------
-# 4. UA: ЗАГОЛОВОК (sticky - прилипає до верху екрану разом зі смужкою табів)
-# 4. EN: TITLE (sticky - sticks to the top of the screen along with the tab strip)
+# UA: ЗАГОЛОВОК (sticky - прилипає до верху екрану разом зі смужкою табів)
+# EN: TITLE (sticky - sticks to the top of the screen along with the tab strip)
 # ----------------------------------------------------------------------
 
 bg_color = st.get_option("theme.backgroundColor") or "#ffffff"
@@ -229,12 +229,14 @@ st.markdown(
         padding-top: 2.5rem;
     }}
 
+    /* висота вбудованої панелі Streamlit (Share / ⭐ / ✏️ / GitHub) —
+       заголовок повинен прилипати НИЖЧЕ неї, а не до самого верху вікна */
+       
     :root {{
         --stheader-height: 2.875rem;
     }}
 
-    /* UA: Заголовок + підпис - липнуть відразу під панеллю Streamlit */
-    /* EN: Title + caption - stick immediately below the Streamlit panel */
+    /* заголовок + підпис — липнуть одразу під панеллю Streamlit */
     
     .dashboard-header {{
         position: sticky;
@@ -254,22 +256,20 @@ st.markdown(
         font-size: 0.85rem;
     }}
 
-    /* UA: Смужка вкладок — липне відразу під заголовком */
-    /* EN: Tab strip - sticks right under the title */
+    /* смуга вкладок — липне одразу під заголовком */
     
     div[data-testid="stTabs"] > div:first-child {{
         position: sticky;
-        top: calc(var(--stheader-height) + 3.6rem);   /* підлаштуй другий доданок під фактичну висоту .dashboard-header, якщо з'явиться нахльост/зазор */
+        top: calc(var(--stheader-height) + 3.6rem);   /* підстрой другий доданок під фактичну висоту .dashboard-header, якщо з'явиться нахлест/зазор */
         background: {bg_color};
         z-index: 998;
         padding-top: 0.3rem;
     }}
 
-    /* UA: Великі KPI (глобально — st.metric більше ніде на дашборді не використовується) */
-    /* UA: Large KPIs (globally - st.metric is not used anywhere else on the dashboard) */
+    /* великі KPI (глобально — st.metric більше ніде на дашборді не використовується) */
     
     [data-testid="stMetricValue"] {{
-        margin-top: 14px;   /* зсуває число вниз щодо підпису */
+        margin-top: 14px;   /* зсуває значення вниз відносно підпису */
         font-size: 2.3rem;
         color: #1a73e8;
         font-weight: 500;
@@ -278,38 +278,35 @@ st.markdown(
         font-size: 1.05rem;
     }}
 
-    /* UA: Центруємо підпис та значення по горизонталі всередині блоку */
-    /* EN: Center the caption and value horizontally inside the block */
-    
+    /* центруємо підпис і значення по горизонталі всередині блоку */
     [data-testid="stMetric"] {{
         text-align: center;
     }}
 
-    /* UA: Центруємо вміст блоку по вертикалі всередині рамки (border=True) */
-    /* EN: Center the block content vertically within the frame (border=True) */
-    
+    /* центруємо вміст блоку по вертикалі всередині рамки (border=True) */
     div[data-testid="stVerticalBlockBorderWrapper"]:has([data-testid="stMetric"]) {{
         display: flex;
         align-items: center;
         justify-content: center;
     }}
-    </style> 
-    
+    </style>
+
     <div class="dashboard-header">
-        <h1>📊 Аналітичний дашборд продажу та прибутку</h1>
-        <p>Датасет: Superstore Sales (Kaggle). Використовуйте фільтри зліва, щоб міняти період, регіон, категорію та сегмент клієнтів.</p>
+        <h1>{T['dashboard_title']}</h1>
+        <p>{T['dashboard_caption']}</p>
     </div>
     """,
     unsafe_allow_html=True,
 )
 
 if df.empty:
-    st.warning("За вибраними фільтрами немає даних. Зміни умови фільтрації.")
+    st.warning(T["empty_warning"])
     st.stop()
 
+
 # ----------------------------------------------------------------------
-# 5. UA: KPI-РОЗРАХУНКИ (висновок - в окремому табі, див. крок нижче)
-# 5. EN: KPI CALCULATIONS (output in a separate tab, see step below)
+# UA: KPI-РОЗРАХУНКИ (висновок - в окремому табі, див. крок нижче)
+# EN: KPI CALCULATIONS (output in a separate tab, see step below)
 # ----------------------------------------------------------------------
 
 total_sales = df["Sales"].sum()
@@ -317,27 +314,28 @@ total_profit = df["Profit"].sum()
 total_orders = df["Order ID"].nunique()
 avg_order_value = total_sales / total_orders if total_orders else 0
 margin_pct = (total_profit / total_sales * 100) if total_sales else 0
-# Частка прибуткових замовлень вважається лише на рівні замовлення (Order ID),
-# т.я. одне замовлення може містити кілька товарних позицій.
-# сумуємо прибуток на замовлення і перевіряємо, чи позитивний він
+
+# Частка прибуткових замовлень рахується на рівні замовлення (Order ID),
+# оскільки одне замовлення може включати кілька товарних позицій —
+# підсумовуємо прибуток по замовленню і перевіряємо, чи він додатний
 order_profit = df.groupby("Order ID")["Profit"].sum()
 profitable_orders_pct = (order_profit > 0).mean() * 100 if len(order_profit) else 0
 
 # ----------------------------------------------------------------------
-# 6. ДИНАМІКА ПРОДАЖІВ У ЧАСІ
-# 6. SALES DYNAMICS OVER TIME
+# UA: РОЗДІЛИ АНАЛІЗУ — В ТАБАХ (однакова висота, щоб сторінка не "стрибала")
+# EN: ANALYSIS SECTIONS — IN TABS (same height so the page doesn't "jump")
 # ----------------------------------------------------------------------
 
-TAB_HEIGHT = 520  # px — зменшено, щоб шапка + таб містилися в один екран
+TAB_HEIGHT = 520  # px — зменшено, щоб шапка + таб вміщалися в один екран
 
 tab_kpi, tab_trend, tab_breakdown, tab_top, tab_discount, tab_table = st.tabs(
     [
-        "🔢 KPI",
-        "📈 Динаміка",
-        "🗂️ Категорії та регіони",
-        "🏆 Топ підкатегорій",
-        "💸 Знижки та прибуток",
-        "📋 Дані",
+        T["tab_kpi"],
+        T["tab_trend"],
+        T["tab_breakdown"],
+        T["tab_top"],
+        T["tab_discount"],
+        T["tab_table"],
     ]
 )
 
