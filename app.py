@@ -8,16 +8,16 @@ import plotly.express as px
 import streamlit as st
 
 # ----------------------------------------------------------------------
-# 1. UA: АВТОР
-# 1. EN: AUTHOR
+# UA: АВТОР
+# EN: AUTHOR
 # ----------------------------------------------------------------------
 
 AUTHOR_NAME = "Andrii Isachenko"
 AUTHOR_URL = "https://www.linkedin.com/in/isachenko-andrii/"
 
 # ----------------------------------------------------------------------
-# 2. UA: НАЛАШТУВАННЯ СТОРІНКИ
-# 2. EN: PAGE SETTINGS
+# UA: НАЛАШТУВАННЯ СТОРІНКИ
+# EN: PAGE SETTINGS
 # ----------------------------------------------------------------------
 
 st.set_page_config(
@@ -29,8 +29,34 @@ st.set_page_config(
 DATA_PATH = "data/superstore.csv"
 
 # ----------------------------------------------------------------------
-# 3. СЛОВНИК ПЕРЕКЛАДІВ - Значення самих даних (Furniture, Consumer, East тощо) НЕ перекладаються — це фактичні значення з датасету.
-# 3. TRANSLATION DICTIONARY - The values ​​of the data themselves (Furniture, Consumer, East, etc.) are NOT translated — these are the actual values ​​from the dataset.
+# UA: ЗАВАНТАЖЕННЯ І ПІДГОТОВКА ДАНИХ (з кешуванням)
+# EN: DATA LOADING AND PREPARATION (with caching)
+# ----------------------------------------------------------------------
+
+@st.cache_data
+def load_data(path: str) -> pd.DataFrame:
+    df = pd.read_csv(path, encoding="latin-1")
+
+   # UA: Kaggle-версії датасета іноді відрізняються регістром/пробілами в назвах колонок
+   # EN: Kaggle versions of the dataset sometimes differ in case/spaces in column names
+    
+    df.columns = [c.strip() for c in df.columns]
+
+    df["Order Date"] = pd.to_datetime(df["Order Date"])
+    df["Ship Date"] = pd.to_datetime(df["Ship Date"])
+
+    df["Year"] = df["Order Date"].dt.year
+    df["Month"] = df["Order Date"].dt.to_period("M").astype(str)
+    df["Delivery Days"] = (df["Ship Date"] - df["Order Date"]).dt.days
+
+    return df
+
+df_raw = load_data(DATA_PATH)
+
+
+# ----------------------------------------------------------------------
+# UA: СЛОВНИК ПЕРЕКЛАДІВ - Значення самих даних (Furniture, Consumer, East тощо) НЕ перекладаються — це фактичні значення з датасету.
+# EN: TRANSLATION DICTIONARY - The values ​​of the data themselves (Furniture, Consumer, East, etc.) are NOT translated — these are the actual values ​​from the dataset.
 # ----------------------------------------------------------------------
 
 TRANSLATIONS = {
@@ -129,8 +155,8 @@ TRANSLATIONS = {
 }
 
 # ----------------------------------------------------------------------
-# 3. ПЕРЕМИКАЧ МОВИ (перший елемент бічної панелі)
-# 4. LANGUAGE SWITCH (first item in the sidebar)
+# UA: ПЕРЕМИКАЧ МОВИ (перший елемент бічної панелі)
+# EN: LANGUAGE SWITCH (first item in the sidebar)
 # ----------------------------------------------------------------------
 
 lang_choice = st.sidebar.radio(
@@ -144,59 +170,34 @@ T = TRANSLATIONS[lang]
 st.sidebar.markdown("---")
 
 # ----------------------------------------------------------------------
-# 2. UA: ЗАВАНТАЖЕННЯ І ПІДГОТОВКА ДАНИХ (з кешуванням)
-# 2. EN: DATA LOADING AND PREPARATION (with caching)
+# UA: БІЧНА ПАНЕЛЬ - ФІЛЬТРИ
+# EN: SIDE PANEL - FILTERS
 # ----------------------------------------------------------------------
 
-@st.cache_data
-def load_data(path: str) -> pd.DataFrame:
-    df = pd.read_csv(path, encoding="latin-1")
-
-   # UA: Kaggle-версії датасета іноді відрізняються регістром/пробілами в назвах колонок
-   # EN: Kaggle versions of the dataset sometimes differ in case/spaces in column names
-    
-    df.columns = [c.strip() for c in df.columns]
-
-    df["Order Date"] = pd.to_datetime(df["Order Date"])
-    df["Ship Date"] = pd.to_datetime(df["Ship Date"])
-
-    df["Year"] = df["Order Date"].dt.year
-    df["Month"] = df["Order Date"].dt.to_period("M").astype(str)
-    df["Delivery Days"] = (df["Ship Date"] - df["Order Date"]).dt.days
-
-    return df
-
-df_raw = load_data(DATA_PATH)
-
-# ----------------------------------------------------------------------
-# 3. UA: БІЧНА ПАНЕЛЬ - ФІЛЬТРИ
-# 3. EN: SIDE PANEL - FILTERS
-# ----------------------------------------------------------------------
-
-st.sidebar.header("Фільтри")
+st.sidebar.header(T["sidebar_header"])
 
 min_date, max_date = df_raw["Order Date"].min(), df_raw["Order Date"].max()
 date_range = st.sidebar.date_input(
-    "Період замовлень",
+    T["date_range_label"],
     value=(min_date, max_date),
     min_value=min_date,
     max_value=max_date,
 )
 
 regions = st.sidebar.multiselect(
-    "Регіон", options=sorted(df_raw["Region"].unique()), default=sorted(df_raw["Region"].unique())
+    T["region_label"], options=sorted(df_raw["Region"].unique()), default=sorted(df_raw["Region"].unique())
 )
 
 categories = st.sidebar.multiselect(
-    "Категорія", options=sorted(df_raw["Category"].unique()), default=sorted(df_raw["Category"].unique())
+    T["category_label"], options=sorted(df_raw["Category"].unique()), default=sorted(df_raw["Category"].unique())
 )
 
 segments = st.sidebar.multiselect(
-    "Сегмент клієнтів", options=sorted(df_raw["Segment"].unique()), default=sorted(df_raw["Segment"].unique())
+    T["segment_label"], options=sorted(df_raw["Segment"].unique()), default=sorted(df_raw["Segment"].unique())
 )
 
-# UA: Застосовуємо фільтри
-# EN: Applying filters
+# Застосовуємо фільтри
+# Apply filters
 
 if len(date_range) == 2:
     start, end = pd.to_datetime(date_range[0]), pd.to_datetime(date_range[1])
@@ -212,7 +213,7 @@ df = df_raw[
 ]
 
 st.sidebar.markdown("---")
-st.sidebar.caption(f"Відфільтровано рядків: **{len(df):,}** з {len(df_raw):,}")
+st.sidebar.caption(f"{T['filtered_rows']}: **{len(df):,}** {T['of_word']} {len(df_raw):,}")
 
 # ----------------------------------------------------------------------
 # 4. UA: ЗАГОЛОВОК (sticky - прилипає до верху екрану разом зі смужкою табів)
