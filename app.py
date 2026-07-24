@@ -133,7 +133,7 @@ st.markdown(
     [data-testid="stMetricValue"] {{
         font-size: 2.3rem;
         color: #1a73e8;
-        font-weight: 700;
+        font-weight: 500;
     }}
     [data-testid="stMetricLabel"] {{
         font-size: 1.05rem;
