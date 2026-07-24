@@ -221,7 +221,7 @@ KPI_BOX_HEIGHT = 150  # px — висота кожного блоку-показ
 
 with tab_kpi:
     with st.container(height=TAB_HEIGHT, border=False):
-        st.subheader("Ключові показники")
+        st.subheader("Ключові показники ефективності")
 
         row1 = st.columns(3)
         with row1[0]:
