@@ -84,12 +84,59 @@ st.sidebar.markdown("---")
 st.sidebar.caption(f"Відфільтровано рядків: **{len(df):,}** з {len(df_raw):,}")
 
 # ----------------------------------------------------------------------
-# 4. ЗАГОЛОВОК
+# 4. ЗАГОЛОВОК (sticky — прилипает к верху экрана вместе с полоской табов)
 # ----------------------------------------------------------------------
-st.title("📊 Аналітичний дашборд продажів")
-st.caption(
-    "Датасет: Superstore Sales (Kaggle). "
-    "Використовуйте фільтри зліва, щоб змінювати період, регіон, категорію та сегмент клієнтів."
+bg_color = st.get_option("theme.backgroundColor") or "#ffffff"
+
+st.markdown(
+    f"""
+    <style>
+    .block-container {{
+        padding-top: 1.2rem;
+    }}
+
+    /* заголовок + подпись — липнут к самому верху */
+    .dashboard-header {{
+        position: sticky;
+        top: 0;
+        background: {bg_color};
+        z-index: 999;
+        padding-bottom: 0.3rem;
+    }}
+    .dashboard-header h1 {{
+        margin-bottom: 0.1rem;
+        font-size: 1.9rem;
+    }}
+    .dashboard-header p {{
+        margin: 0;
+        color: gray;
+        font-size: 0.85rem;
+    }}
+
+    /* полоска вкладок — липнет сразу под заголовком */
+    div[data-testid="stTabs"] > div:first-child {{
+        position: sticky;
+        top: 3.6rem;   /* подстрой под фактическую высоту .dashboard-header, если появится нахлёст/зазор */
+        background: {bg_color};
+        z-index: 998;
+        padding-top: 0.3rem;
+    }}
+
+    /* крупные KPI на отдельном табе */
+    .kpi-tab [data-testid="stMetricValue"] {{
+        font-size: 2.3rem;
+    }}
+    .kpi-tab [data-testid="stMetricLabel"] {{
+        font-size: 1.05rem;
+    }}
+    </style>
+
+    <div class="dashboard-header">
+        <h1>📊 Аналитический дашборд продаж</h1>
+        <p>Датасет: Superstore Sales (Kaggle). Используй фильтры слева, чтобы менять период, регион, категорию и сегмент клиентов.</p>
+    </div>
+    """,
+    unsafe_allow_html=True,
 )
 
 if df.empty:
@@ -97,37 +144,45 @@ if df.empty:
     st.stop()
 
 # ----------------------------------------------------------------------
-# 5. KPI-БЛОК
+# 5. KPI-РАСЧЁТЫ (вывод — в отдельном табе, см. шаг ниже)
 # ----------------------------------------------------------------------
 total_sales = df["Sales"].sum()
 total_profit = df["Profit"].sum()
 total_orders = df["Order ID"].nunique()
 avg_order_value = total_sales / total_orders if total_orders else 0
 margin_pct = (total_profit / total_sales * 100) if total_sales else 0
-
-col1, col2, col3, col4, col5 = st.columns(5)
-col1.metric("Виторг", f"${total_sales:,.0f}")
-col2.metric("Прибуток", f"${total_profit:,.0f}")
-col3.metric("Замовлень", f"{total_orders:,}")
-col4.metric("Середній чек", f"${avg_order_value:,.0f}")
-col5.metric("Маржинальність", f"{margin_pct:.1f}%")
-
-st.markdown("---")
-
 # ----------------------------------------------------------------------
 # 6. ДИНАМІКА ПРОДАЖІВ У ЧАСІ
 # ----------------------------------------------------------------------
-TAB_HEIGHT = 640  # px — за необхідності підібрати під свій контент
+TAB_HEIGHT = 520  # px — уменьшено, чтобы шапка + таб помещались в один экран
 
-tab_trend, tab_breakdown, tab_top, tab_discount, tab_table = st.tabs(
+tab_kpi, tab_trend, tab_breakdown, tab_top, tab_discount, tab_table = st.tabs(
     [
-        "📈 Динаміка",
-        "🗂️ Категорії та регіони",
-        "🏆 Топ підкатегорій",
-        "💸 Знижки та прибуток",
-        "📋 Дані",
+        "🔢 KPI",
+        "📈 Динамика",
+        "🗂️ Категории и регионы",
+        "🏆 Топ подкатегорий",
+        "💸 Скидки и прибыль",
+        "📋 Данные",
     ]
 )
+
+# --- Таб KPI: крупные ключевые метрики --------------------------------
+with tab_kpi:
+    with st.container(height=TAB_HEIGHT, border=False):
+        st.markdown('<div class="kpi-tab">', unsafe_allow_html=True)
+
+        st.subheader("Ключевые показатели")
+        col1, col2 = st.columns(2)
+        col1.metric("Выручка", f"${total_sales:,.0f}")
+        col2.metric("Прибыль", f"${total_profit:,.0f}")
+
+        col3, col4, col5 = st.columns(3)
+        col3.metric("Заказов", f"{total_orders:,}")
+        col4.metric("Средний чек", f"${avg_order_value:,.0f}")
+        col5.metric("Маржинальность", f"{margin_pct:.1f}%")
+
+        st.markdown('</div>', unsafe_allow_html=True)
 
 # --- Таб 1: Динаміка продажів у часі -----------------------------------
 with tab_trend:
@@ -147,6 +202,7 @@ with tab_trend:
             y=["Sales", "Profit"],
             labels={"value": "Сума, $", "Month": "Місяць", "variable": "Показник"},
             markers=True,
+            height=300
         )
         fig_trend.update_layout(hovermode="x unified", legend_title_text="")
         st.plotly_chart(fig_trend, use_container_width=True)
@@ -168,6 +224,7 @@ with tab_breakdown:
                 color="Profit",
                 color_continuous_scale="RdYlGn",
                 labels={"Sales": "Выручка, $", "Category": ""},
+                height=300
             )
             st.plotly_chart(fig_cat, use_container_width=True)
 
@@ -179,6 +236,7 @@ with tab_breakdown:
                 names="Region",
                 values="Sales",
                 hole=0.45,
+                height=300
             )
             fig_region.update_traces(textinfo="percent+label")
             st.plotly_chart(fig_region, use_container_width=True)
@@ -202,6 +260,7 @@ with tab_top:
             color="Profit",
             color_continuous_scale="RdYlGn",
             labels={"Sub-Category": "Підкатегорія", "Profit": "Прибуток, $"},
+            height=300
         )
         st.plotly_chart(fig_sub, use_container_width=True)
 
@@ -226,6 +285,7 @@ with tab_discount:
             size="Sales",
             opacity=0.6,
             labels={"Discount": "Знижка", "Profit": "Прибуток, $"},
+            height=300
         )
         st.plotly_chart(fig_scatter, use_container_width=True)
 
