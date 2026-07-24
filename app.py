@@ -129,18 +129,28 @@ st.markdown(
         padding-top: 0.3rem;
     }}
 
-     /* крупные KPI (глобально — st.metric больше нигде на дашборде не используется) */
+    /* крупные KPI (глобально — st.metric больше нигде на дашборде не используется) */
     [data-testid="stMetricValue"] {{
         font-size: 2.3rem;
         color: #1a73e8;
-        font-weight: 500;
+        font-weight: 700;
     }}
     [data-testid="stMetricLabel"] {{
         font-size: 1.05rem;
     }}
-    </style>
 
-    <div class="dashboard-header">
+    /* центрируем подпись и значение по горизонтали внутри блока */
+    [data-testid="stMetric"] {{
+        text-align: center;
+    }}
+
+    /* центрируем содержимое блока по вертикали внутри рамки (border=True) */
+    div[data-testid="stVerticalBlockBorderWrapper"]:has([data-testid="stMetric"]) {{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }}
+    </style>    <div class="dashboard-header">
         <h1>📊 Аналитический дашборд продаж</h1>
         <p>Датасет: Superstore Sales (Kaggle). Используй фильтры слева, чтобы менять период, регион, категорию и сегмент клиентов.</p>
     </div>
