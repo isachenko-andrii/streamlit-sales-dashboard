@@ -375,7 +375,7 @@ with tab_kpi:
 
 with tab_trend:
     with st.container(height=TAB_HEIGHT, border=False):
-        st.subheader("Динаміка продажу та прибутку по місяцях")
+        st.subheader(T["trend_title"])
 
         monthly = (
             df.groupby("Month")[["Sales", "Profit"]]
@@ -388,9 +388,13 @@ with tab_trend:
             monthly,
             x="Month",
             y=["Sales", "Profit"],
-            labels={"value": "Сума, $", "Month": "Місяць", "variable": "Показник"},
+            labels={
+                "value": T["trend_value_label"],
+                "Month": T["trend_month_label"],
+                "variable": T["trend_legend_label"],
+            },
             markers=True,
-            height=400
+            height=400,
         )
         fig_trend.update_layout(hovermode="x unified", legend_title_text="")
         st.plotly_chart(fig_trend, use_container_width=True)
@@ -403,7 +407,7 @@ with tab_breakdown:
         col_left, col_right = st.columns(2)
 
         with col_left:
-            st.subheader("Продажі за категоріями")
+            st.subheader(T["cat_title"])
             cat_data = df.groupby("Category")[["Sales", "Profit"]].sum().reset_index()
             fig_cat = px.bar(
                 cat_data.sort_values("Sales", ascending=True),
@@ -413,20 +417,20 @@ with tab_breakdown:
                 text_auto=".2s",
                 color="Profit",
                 color_continuous_scale="RdYlGn",
-                labels={"Sales": "Виторг, $", "Category": ""},
-                height=400
+                labels={"Sales": T["cat_sales_label"], "Category": ""},
+                height=400,
             )
             st.plotly_chart(fig_cat, use_container_width=True)
 
         with col_right:
-            st.subheader("Продажі по регіонах")
+            st.subheader(T["region_title"])
             region_data = df.groupby("Region")["Sales"].sum().reset_index()
             fig_region = px.pie(
                 region_data,
                 names="Region",
                 values="Sales",
                 hole=0.45,
-                height=400
+                height=400,
             )
             fig_region.update_traces(textinfo="percent+label")
             st.plotly_chart(fig_region, use_container_width=True)
@@ -436,7 +440,7 @@ with tab_breakdown:
 
 with tab_top:
     with st.container(height=TAB_HEIGHT, border=False):
-        st.subheader("Топ-10 підкатегорій за прибутком")
+        st.subheader(T["top_title"])
 
         sub_data = (
             df.groupby("Sub-Category")[["Sales", "Profit"]]
@@ -451,17 +455,14 @@ with tab_top:
             y="Profit",
             color="Profit",
             color_continuous_scale="RdYlGn",
-            labels={"Sub-Category": "Підкатегорія", "Profit": "Прибуток, $"},
-            height=400
+            labels={"Sub-Category": T["top_subcat_label"], "Profit": T["top_profit_label"]},
+            height=400,
         )
         st.plotly_chart(fig_sub, use_container_width=True)
 
         if (sub_data["Profit"] < 0).any():
             losing = sub_data[sub_data["Profit"] < 0]["Sub-Category"].tolist()
-            st.info(
-                "⚠️ Підкатегорії з негативним прибутком у вибраному періоді: "
-                + ", ".join(losing)
-                + ". Варто перевірити рівень знижок за цими позиціями."
+            st.info(T["losing_prefix"] + ", ".join(losing) + T["losing_suffix"])
             )
 
 # --- UA: Таб 5: Знижки vs прибуток ---------------------------------------------
@@ -469,7 +470,7 @@ with tab_top:
 
 with tab_discount:
     with st.container(height=TAB_HEIGHT, border=False):
-        st.subheader("Вплив знижок на прибуток")
+        st.subheader(T["discount_title"])
 
         fig_scatter = px.scatter(
             df.sample(min(1500, len(df)), random_state=1),
@@ -478,32 +479,30 @@ with tab_discount:
             color="Category",
             size="Sales",
             opacity=0.6,
-            labels={"Discount": "Знижка", "Profit": "Прибуток, $"},
-            height=400
+            labels={"Discount": T["discount_label"], "Profit": T["discount_profit_label"]},
+            height=400,
         )
         st.plotly_chart(fig_scatter, use_container_width=True)
 
         corr = df["Discount"].corr(df["Profit"])
-        st.caption(f"Коефіцієнт кореляції між знижкою та прибутком: **{corr:.2f}**")
+        st.caption(f"{T['corr_caption']}**{corr:.2f}**")
 
 # --- UA: Таб 6: Детальні дані ------------------------------------------------
 # --- EN: Tab 6: Detailed data ------------------------------------------------
 
 with tab_table:
     with st.container(height=TAB_HEIGHT, border=False):
-        st.subheader("Детальні дані")
+        st.subheader(T["table_title"])
 
         csv_bytes = df.to_csv(index=False).encode("utf-8")
         st.download_button(
-            label="⬇️ Завантажити відфільтровані дані(CSV)",
+            label=T["download_button"],
             data=csv_bytes,
             file_name="superstore_filtered.csv",
             mime="text/csv",
         )
 
-        # UA: Висота таблиці трохи менша за висоту таба, щоб заголовок і кнопка теж помістилися
-        # EN: The table height is slightly smaller than the tab height so that the header and button also fit
-        
+        # Висота таблиці трохи менша за висоту таба, щоб заголовок і кнопка теж помістилися
         st.dataframe(
             df.sort_values("Order Date", ascending=False),
             use_container_width=True,
