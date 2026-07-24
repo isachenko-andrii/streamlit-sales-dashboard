@@ -439,7 +439,7 @@ with tab_breakdown:
                 hole=0.45,
                 height=400
             )
-            fig_region.update_traces(textinfo:"percent+label")
+            fig_region.update_traces(textinfo="percent+label")
             st.plotly_chart(fig_region, use_container_width=True)
 
 
