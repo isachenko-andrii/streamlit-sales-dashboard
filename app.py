@@ -117,123 +117,137 @@ st.markdown("---")
 # ----------------------------------------------------------------------
 # 6. ДИНАМІКА ПРОДАЖІВ У ЧАСІ
 # ----------------------------------------------------------------------
-st.subheader("Динаміка продажу та прибутку по місяцях")
+TAB_HEIGHT = 640  # px — за необхідності підібрати під свій контент
 
-monthly = (
-    df.groupby("Month")[["Sales", "Profit"]]
-    .sum()
-    .reset_index()
-    .sort_values("Month")
+tab_trend, tab_breakdown, tab_top, tab_discount, tab_table = st.tabs(
+    [
+        "📈 Динаміка",
+        "🗂️ Категорії та регіони",
+        "🏆 Топ підкатегорій",
+        "💸 Знижки та прибуток",
+        "📋 Дані",
+    ]
 )
 
-fig_trend = px.line(
-    monthly,
-    x="Month",
-    y=["Sales", "Profit"],
-    labels={"value": "Сума, $", "Month": "Місяць", "variable": "Показник"},
-    markers=True,
-)
-fig_trend.update_layout(hovermode="x unified", legend_title_text="")
-st.plotly_chart(fig_trend, use_container_width=True)
+# --- Таб 1: Динаміка продажів у часі -----------------------------------
+with tab_trend:
+    with st.container(height=TAB_HEIGHT, border=False):
+        st.subheader("Динаміка продажу та прибутку по місяцях")
 
-# ----------------------------------------------------------------------
-# 7. РОЗБИВАННЯ ПО КАТЕГОРІЯМ І РЕГІОНАМ
-# ----------------------------------------------------------------------
-col_left, col_right = st.columns(2)
+        monthly = (
+            df.groupby("Month")[["Sales", "Profit"]]
+            .sum()
+            .reset_index()
+            .sort_values("Month")
+        )
 
-with col_left:
-    st.subheader("Продаж за категоріями")
-    cat_data = df.groupby("Category")[["Sales", "Profit"]].sum().reset_index()
-    fig_cat = px.bar(
-        cat_data.sort_values("Sales", ascending=True),
-        x="Sales",
-        y="Category",
-        orientation="h",
-        text_auto=".2s",
-        color="Profit",
-        color_continuous_scale="RdYlGn",
-        labels={"Sales": "Выручка, $", "Category": ""},
-    )
-    st.plotly_chart(fig_cat, use_container_width=True)
+        fig_trend = px.line(
+            monthly,
+            x="Month",
+            y=["Sales", "Profit"],
+            labels={"value": "Сума, $", "Month": "Місяць", "variable": "Показник"},
+            markers=True,
+        )
+        fig_trend.update_layout(hovermode="x unified", legend_title_text="")
+        st.plotly_chart(fig_trend, use_container_width=True)
 
-with col_right:
-    st.subheader("Продаж по регіонах")
-    region_data = df.groupby("Region")["Sales"].sum().reset_index()
-    fig_region = px.pie(
-        region_data,
-        names="Region",
-        values="Sales",
-        hole=0.45,
-    )
-    fig_region.update_traces(textinfo="percent+label")
-    st.plotly_chart(fig_region, use_container_width=True)
+# --- Таб 2: Розбивка за категоріями та регіонами-----------------------------
+with tab_breakdown:
+    with st.container(height=TAB_HEIGHT, border=False):
+        col_left, col_right = st.columns(2)
 
-# ----------------------------------------------------------------------
-# 8. ТОП ТОВАРІВ І ПІДКАТЕГОРІЙ
-# ----------------------------------------------------------------------
-st.subheader("Топ-10 підкатегорій за прибутком")
+        with col_left:
+            st.subheader("Продаж за категоріями")
+            cat_data = df.groupby("Category")[["Sales", "Profit"]].sum().reset_index()
+            fig_cat = px.bar(
+                cat_data.sort_values("Sales", ascending=True),
+                x="Sales",
+                y="Category",
+                orientation="h",
+                text_auto=".2s",
+                color="Profit",
+                color_continuous_scale="RdYlGn",
+                labels={"Sales": "Выручка, $", "Category": ""},
+            )
+            st.plotly_chart(fig_cat, use_container_width=True)
 
-sub_data = (
-    df.groupby("Sub-Category")[["Sales", "Profit"]]
-    .sum()
-    .reset_index()
-    .sort_values("Profit", ascending=False)
-)
+        with col_right:
+            st.subheader("Продаж по регіонах")
+            region_data = df.groupby("Region")["Sales"].sum().reset_index()
+            fig_region = px.pie(
+                region_data,
+                names="Region",
+                values="Sales",
+                hole=0.45,
+            )
+            fig_region.update_traces(textinfo="percent+label")
+            st.plotly_chart(fig_region, use_container_width=True)
 
-fig_sub = px.bar(
-    sub_data.head(10),
-    x="Sub-Category",
-    y="Profit",
-    color="Profit",
-    color_continuous_scale="RdYlGn",
-    labels={"Sub-Category": "Підкатегорія", "Profit": "Прибуток, $"},
-)
-st.plotly_chart(fig_sub, use_container_width=True)
+# --- Таб 3: Топ підкатегорій за прибутком-----------------------------------
+with tab_top:
+    with st.container(height=TAB_HEIGHT, border=False):
+        st.subheader("Топ-10 підкатегорій за прибутком")
 
-if (sub_data["Profit"] < 0).any():
-    losing = sub_data[sub_data["Profit"] < 0]["Sub-Category"].tolist()
-    st.info(
-        "⚠️ Підкатегорії з негативним прибутком у вибраному періоді: "
-        + ", ".join(losing)
-        + ". Варто перевірити рівень знижок за цими позиціями."
-    )
+        sub_data = (
+            df.groupby("Sub-Category")[["Sales", "Profit"]]
+            .sum()
+            .reset_index()
+            .sort_values("Profit", ascending=False)
+        )
 
-# ----------------------------------------------------------------------
-# 9. ЗНИЖКИ VS ПРИБУТОК
-# ----------------------------------------------------------------------
-st.subheader("Вплив знижки на прибуток")
+        fig_sub = px.bar(
+            sub_data.head(10),
+            x="Sub-Category",
+            y="Profit",
+            color="Profit",
+            color_continuous_scale="RdYlGn",
+            labels={"Sub-Category": "Підкатегорія", "Profit": "Прибуток, $"},
+        )
+        st.plotly_chart(fig_sub, use_container_width=True)
 
-fig_scatter = px.scatter(
-    df.sample(min(1500, len(df)), random_state=1),
-    x="Discount",
-    y="Profit",
-    color="Category",
-    size="Sales",
-    opacity=0.6,
-    labels={"Discount": "Знижка", "Profit": "Прибуток, $"},
-)
-st.plotly_chart(fig_scatter, use_container_width=True)
+        if (sub_data["Profit"] < 0).any():
+            losing = sub_data[sub_data["Profit"] < 0]["Sub-Category"].tolist()
+            st.info(
+                "⚠️ Підкатегорії з негативним прибутком у вибраному періоді: "
+                + ", ".join(losing)
+                + ". Варто перевірити рівень знижок за цими позиціями."
+            )
 
-corr = df["Discount"].corr(df["Profit"])
-st.caption(f"Коефіцієнт кореляції між знижкою та прибутком: **{corr:.2f}**")
+# --- Таб 4: Знижки vs прибуток ---------------------------------------------
+with tab_discount:
+    with st.container(height=TAB_HEIGHT, border=False):
+        st.subheader("Вплив знижки на прибуток")
 
-# ----------------------------------------------------------------------
-# 10.ТАБЛИЦЯ З ДАНИМИ + ВИВАНТАЖЕННЯ
-# ----------------------------------------------------------------------
-st.markdown("---")
-st.subheader("Детальні дані")
+        fig_scatter = px.scatter(
+            df.sample(min(1500, len(df)), random_state=1),
+            x="Discount",
+            y="Profit",
+            color="Category",
+            size="Sales",
+            opacity=0.6,
+            labels={"Discount": "Знижка", "Profit": "Прибуток, $"},
+        )
+        st.plotly_chart(fig_scatter, use_container_width=True)
 
-with st.expander("Показати таблицю відфільтрованих даних"):
-    st.dataframe(
-        df.sort_values("Order Date", ascending=False),
-        use_container_width=True,
-        height=400,
-    )
+        corr = df["Discount"].corr(df["Profit"])
+        st.caption(f"Коефіцієнт кореляції між знижкою та прибутком: **{corr:.2f}**")
 
-    csv_bytes = df.to_csv(index=False).encode("utf-8")
-    st.download_button(
-        label="⬇️ Завантажити відфільтровані дані (CSV)",
-        data=csv_bytes,
-        file_name="superstore_filtered.csv",
-        mime="text/csv",
-    )
+# --- Таб 5: Детальні дані ------------------------------------------------
+with tab_table:
+    with st.container(height=TAB_HEIGHT, border=False):
+        st.subheader("Детальні дані")
+
+        csv_bytes = df.to_csv(index=False).encode("utf-8")
+        st.download_button(
+            label="⬇️ Завантажити відфільтровані дані(CSV)",
+            data=csv_bytes,
+            file_name="superstore_filtered.csv",
+            mime="text/csv",
+        )
+
+        # Висота таблиці трохи менша за висоту таба, щоб заголовок і кнопка теж помістилися
+        st.dataframe(
+            df.sort_values("Order Date", ascending=False),
+            use_container_width=True,
+            height=TAB_HEIGHT - 140,
+        )
