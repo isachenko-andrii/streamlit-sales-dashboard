@@ -1,5 +1,5 @@
 """
-Аналітичний дашборд продажів (Superstore Dataset).
+Аналітичний дашборд продажів та прибутку
 Запуск локально: streamlit run app.py
 """
 
@@ -8,10 +8,11 @@ import plotly.express as px
 import streamlit as st
 
 # ----------------------------------------------------------------------
-# 1. НАЛАШТУВАННЯ СТОРІНКИ
+# 1. UA: НАЛАШТУВАННЯ СТОРІНКИ
+# 1. EN: PAGE SETTINGS
 # ----------------------------------------------------------------------
 st.set_page_config(
-    page_title="Аналітика продажів Superstore",
+    page_title="Аналітика продажів та прибутку",
     page_icon="📊",
     layout="wide",
 )
@@ -20,13 +21,16 @@ DATA_PATH = "data/superstore.csv"
 
 
 # ----------------------------------------------------------------------
-# 2. ЗАВАНТАЖЕННЯ І ПІДГОТОВКА ДАНИХ (з кешуванням)
+# 2. UA: ЗАВАНТАЖЕННЯ І ПІДГОТОВКА ДАНИХ (з кешуванням)
+# 2. EN: DATA LOADING AND PREPARATION (with caching)
 # ----------------------------------------------------------------------
 @st.cache_data
 def load_data(path: str) -> pd.DataFrame:
     df = pd.read_csv(path, encoding="latin-1")
 
-   # Kaggle-версії датасета іноді відрізняються регістром/пробілами в назвах колонок
+   # UA: Kaggle-версії датасета іноді відрізняються регістром/пробілами в назвах колонок
+   # EN: Kaggle versions of the dataset sometimes differ in case/spaces in column names
+    
     df.columns = [c.strip() for c in df.columns]
 
     df["Order Date"] = pd.to_datetime(df["Order Date"])
@@ -42,9 +46,10 @@ def load_data(path: str) -> pd.DataFrame:
 df_raw = load_data(DATA_PATH)
 
 # ----------------------------------------------------------------------
-# 3. БІЧНА ПАНЕЛЬ - ФІЛЬТРИ
+# 3. UA: БІЧНА ПАНЕЛЬ - ФІЛЬТРИ
+# 3. EN: SIDE PANEL - FILTERS
 # ----------------------------------------------------------------------
-st.sidebar.header("Фильтри")
+st.sidebar.header("Фільтри")
 
 min_date, max_date = df_raw["Order Date"].min(), df_raw["Order Date"].max()
 date_range = st.sidebar.date_input(
@@ -66,7 +71,9 @@ segments = st.sidebar.multiselect(
     "Сегмент клієнтів", options=sorted(df_raw["Segment"].unique()), default=sorted(df_raw["Segment"].unique())
 )
 
-# Застосовуємо фільтри
+# UA: Застосовуємо фільтри
+# EN: Applying filters
+
 if len(date_range) == 2:
     start, end = pd.to_datetime(date_range[0]), pd.to_datetime(date_range[1])
 else:
@@ -84,7 +91,8 @@ st.sidebar.markdown("---")
 st.sidebar.caption(f"Відфільтровано рядків: **{len(df):,}** з {len(df_raw):,}")
 
 # ----------------------------------------------------------------------
-# 4. ЗАГОЛОВОК (sticky — прилипает к верху экрана вместе с полоской табов)
+# 4. UA: ЗАГОЛОВОК (sticky - прилипає до верху екрану разом зі смужкою табів)
+# 4. EN: TITLE (sticky - sticks to the top of the screen along with the tab strip)
 # ----------------------------------------------------------------------
 bg_color = st.get_option("theme.backgroundColor") or "#ffffff"
 
@@ -95,13 +103,13 @@ st.markdown(
         padding-top: 2.5rem;
     }}
 
-    /* высота встроенной панели Streamlit (Share / ⭐ / ✏️ / GitHub) —
-       заголовок должен прилипать НИЖЕ неё, а не к самому верху окна */
     :root {{
         --stheader-height: 2.875rem;
     }}
 
-    /* заголовок + подпись — липнут сразу под панелью Streamlit */
+    /* UA: Заголовок + підпис - липнуть відразу під панеллю Streamlit */
+    /* EN: Title + caption - stick immediately below the Streamlit panel */
+    
     .dashboard-header {{
         position: sticky;
         top: var(--stheader-height);
@@ -120,18 +128,22 @@ st.markdown(
         font-size: 0.85rem;
     }}
 
-    /* полоска вкладок — липнет сразу под заголовком */
+    /* UA: Смужка вкладок — липне відразу під заголовком */
+    /* EN: Tab strip - sticks right under the title */
+    
     div[data-testid="stTabs"] > div:first-child {{
         position: sticky;
-        top: calc(var(--stheader-height) + 3.6rem);   /* подстрой второе слагаемое под фактическую высоту .dashboard-header, если появится нахлёст/зазор */
+        top: calc(var(--stheader-height) + 3.6rem);   /* підлаштуй другий доданок під фактичну висоту .dashboard-header, якщо з'явиться нахльост/зазор */
         background: {bg_color};
         z-index: 998;
         padding-top: 0.3rem;
     }}
 
-    /* крупные KPI (глобально — st.metric больше нигде на дашборде не используется) */
+    /* UA: Великі KPI (глобально — st.metric більше ніде на дашборді не використовується) */
+    /* UA: Large KPIs (globally - st.metric is not used anywhere else on the dashboard) */
+    
     [data-testid="stMetricValue"] {{
-        margin-top: 14px;   /* сдвигает число вниз относительно подписи */
+        margin-top: 14px;   /* зсуває число вниз щодо підпису */
         font-size: 2.3rem;
         color: #1a73e8;
         font-weight: 500;
@@ -140,12 +152,16 @@ st.markdown(
         font-size: 1.05rem;
     }}
 
-    /* центрируем подпись и значение по горизонтали внутри блока */
+    /* UA: Центруємо підпис та значення по горизонталі всередині блоку */
+    /* EN: Center the caption and value horizontally inside the block */
+    
     [data-testid="stMetric"] {{
         text-align: center;
     }}
 
-    /* центрируем содержимое блока по вертикали внутри рамки (border=True) */
+    /* UA: Центруємо вміст блоку по вертикалі всередині рамки (border=True) */
+    /* EN: Center the block content vertically within the frame (border=True) */
+    
     div[data-testid="stVerticalBlockBorderWrapper"]:has([data-testid="stMetric"]) {{
         display: flex;
         align-items: center;
@@ -154,77 +170,84 @@ st.markdown(
     </style> 
     
     <div class="dashboard-header">
-        <h1>📊 Аналитический дашборд продаж</h1>
-        <p>Датасет: Superstore Sales (Kaggle). Используйте фильтры слева, чтобы менять период, регион, категорию и сегмент клиентов.</p>
+        <h1>📊 Аналітичний дашборд продажу та прибутку</h1>
+        <p>Датасет: Superstore Sales (Kaggle). Використовуйте фільтри зліва, щоб міняти період, регіон, категорію та сегмент клієнтів.</p>
     </div>
     """,
     unsafe_allow_html=True,
 )
 
 if df.empty:
-    st.warning("По выбранным фильтрам нет данных. Измени условия фильтрации.")
+    st.warning("За вибраними фільтрами немає даних. Зміни умови фільтрації.")
     st.stop()
 
 # ----------------------------------------------------------------------
-# 5. KPI-РАСЧЁТЫ (вывод — в отдельном табе, см. шаг ниже)
+# 5. UA: KPI-РОЗРАХУНКИ (висновок - в окремому табі, див. крок нижче)
+# 5. EN: KPI CALCULATIONS (output in a separate tab, see step below)
 # ----------------------------------------------------------------------
+
 total_sales = df["Sales"].sum()
 total_profit = df["Profit"].sum()
 total_orders = df["Order ID"].nunique()
 avg_order_value = total_sales / total_orders if total_orders else 0
 margin_pct = (total_profit / total_sales * 100) if total_sales else 0
-# Доля прибыльных заказов считается на уровне заказа (Order ID),
-# т.к. один заказ может включать несколько товарных позиций —
-# суммируем прибыль по заказу и проверяем, положительная ли она
+# Частка прибуткових замовлень вважається лише на рівні замовлення (Order ID),
+# т.я. одне замовлення може містити кілька товарних позицій.
+# сумуємо прибуток на замовлення і перевіряємо, чи позитивний він
 order_profit = df.groupby("Order ID")["Profit"].sum()
 profitable_orders_pct = (order_profit > 0).mean() * 100 if len(order_profit) else 0
 
 # ----------------------------------------------------------------------
 # 6. ДИНАМІКА ПРОДАЖІВ У ЧАСІ
+# 6. SALES DYNAMICS OVER TIME
 # ----------------------------------------------------------------------
-TAB_HEIGHT = 520  # px — уменьшено, чтобы шапка + таб помещались в один экран
+TAB_HEIGHT = 520  # px — зменшено, щоб шапка + таб містилися в один екран
 
 tab_kpi, tab_trend, tab_breakdown, tab_top, tab_discount, tab_table = st.tabs(
     [
         "🔢 KPI",
-        "📈 Динамика",
-        "🗂️ Категории и регионы",
-        "🏆 Топ подкатегорий",
-        "💸 Скидки и прибыль",
-        "📋 Данные",
+        "📈 Динаміка",
+        "🗂️ Категорії та регіони",
+        "🏆 Топ підкатегорій",
+        "💸 Знижки та прибуток",
+        "📋 Дані",
     ]
 )
 
-# --- Таб KPI: крупные ключевые метрики --------------------------------
-KPI_BOX_HEIGHT = 150  # px — высота каждого блока-показателя; увеличь при желании
+# --- UA: Таб 1 KPI: великі ключові метрики --------------------------------
+# --- UA: Tab 1 KPI: major key metrics -------------------------------------
+
+KPI_BOX_HEIGHT = 150  # px — висота кожного блоку-показника, можна збільшити за бажання
 
 with tab_kpi:
     with st.container(height=TAB_HEIGHT, border=False):
-        st.subheader("Ключевые показатели")
+        st.subheader("Ключові показники")
 
         row1 = st.columns(3)
         with row1[0]:
             with st.container(border=True, height=KPI_BOX_HEIGHT):
-                st.metric("Выручка", f"${total_sales:,.0f}")
+                st.metric("Виторг", f"${total_sales:,.0f}")
         with row1[1]:
             with st.container(border=True, height=KPI_BOX_HEIGHT):
-                st.metric("Прибыль", f"${total_profit:,.0f}")
+                st.metric("Прибуток", f"${total_profit:,.0f}")
         with row1[2]:
             with st.container(border=True, height=KPI_BOX_HEIGHT):
-                st.metric("Заказов", f"{total_orders:,}")
+                st.metric("Замовлень", f"{total_orders:,}")
 
         row2 = st.columns(3)
         with row2[0]:
             with st.container(border=True, height=KPI_BOX_HEIGHT):
-                st.metric("Средний чек", f"${avg_order_value:,.0f}")
+                st.metric("Середній чек", f"${avg_order_value:,.0f}")
         with row2[1]:
             with st.container(border=True, height=KPI_BOX_HEIGHT):
-                st.metric("Маржинальность", f"{margin_pct:.1f}%")
+                st.metric("Маржинальність", f"{margin_pct:.1f}%")
         with row2[2]:
             with st.container(border=True, height=KPI_BOX_HEIGHT):
-                st.metric("Доля прибыльных заказов", f"{profitable_orders_pct:.1f}%")
+                st.metric("Частка прибуткових замовлень", f"{profitable_orders_pct:.1f}%")
 
-# --- Таб 1: Динаміка продажів у часі -----------------------------------
+# --- UA: Таб 2: Динаміка продажів у часі -----------------------------------
+# --- EN: Tab 2: Sales dynamics over time -----------------------------------
+
 with tab_trend:
     with st.container(height=TAB_HEIGHT, border=False):
         st.subheader("Динаміка продажу та прибутку по місяцях")
@@ -247,13 +270,15 @@ with tab_trend:
         fig_trend.update_layout(hovermode="x unified", legend_title_text="")
         st.plotly_chart(fig_trend, use_container_width=True)
 
-# --- Таб 2: Розбивка за категоріями та регіонами-----------------------------
+# --- UA: Таб 3: Розбивка за категоріями та регіонами-----------------------------
+# --- UA: Tab 3: Breakdown by categories and regions------------------------------
+
 with tab_breakdown:
     with st.container(height=TAB_HEIGHT, border=False):
         col_left, col_right = st.columns(2)
 
         with col_left:
-            st.subheader("Продаж за категоріями")
+            st.subheader("Продажі за категоріями")
             cat_data = df.groupby("Category")[["Sales", "Profit"]].sum().reset_index()
             fig_cat = px.bar(
                 cat_data.sort_values("Sales", ascending=True),
@@ -263,13 +288,13 @@ with tab_breakdown:
                 text_auto=".2s",
                 color="Profit",
                 color_continuous_scale="RdYlGn",
-                labels={"Sales": "Выручка, $", "Category": ""},
+                labels={"Sales": "Виторг, $", "Category": ""},
                 height=400
             )
             st.plotly_chart(fig_cat, use_container_width=True)
 
         with col_right:
-            st.subheader("Продаж по регіонах")
+            st.subheader("Продажі по регіонах")
             region_data = df.groupby("Region")["Sales"].sum().reset_index()
             fig_region = px.pie(
                 region_data,
@@ -281,7 +306,9 @@ with tab_breakdown:
             fig_region.update_traces(textinfo="percent+label")
             st.plotly_chart(fig_region, use_container_width=True)
 
-# --- Таб 3: Топ підкатегорій за прибутком-----------------------------------
+# --- UA: Таб 4: Топ підкатегорій за прибутком-----------------------------------
+# --- EN: Tab 4: Top subcategories by revenue-----------------------------------
+
 with tab_top:
     with st.container(height=TAB_HEIGHT, border=False):
         st.subheader("Топ-10 підкатегорій за прибутком")
@@ -312,10 +339,12 @@ with tab_top:
                 + ". Варто перевірити рівень знижок за цими позиціями."
             )
 
-# --- Таб 4: Знижки vs прибуток ---------------------------------------------
+# --- UA: Таб 5: Знижки vs прибуток ---------------------------------------------
+# --- EN: Tab 5: Discounts vs profit --------------------------------------------
+
 with tab_discount:
     with st.container(height=TAB_HEIGHT, border=False):
-        st.subheader("Вплив знижки на прибуток")
+        st.subheader("Вплив знижок на прибуток")
 
         fig_scatter = px.scatter(
             df.sample(min(1500, len(df)), random_state=1),
@@ -332,7 +361,9 @@ with tab_discount:
         corr = df["Discount"].corr(df["Profit"])
         st.caption(f"Коефіцієнт кореляції між знижкою та прибутком: **{corr:.2f}**")
 
-# --- Таб 5: Детальні дані ------------------------------------------------
+# --- UA: Таб 6: Детальні дані ------------------------------------------------
+# --- EN: Tab 6: Detailed data ------------------------------------------------
+
 with tab_table:
     with st.container(height=TAB_HEIGHT, border=False):
         st.subheader("Детальні дані")
@@ -345,7 +376,9 @@ with tab_table:
             mime="text/csv",
         )
 
-        # Висота таблиці трохи менша за висоту таба, щоб заголовок і кнопка теж помістилися
+        # UA: Висота таблиці трохи менша за висоту таба, щоб заголовок і кнопка теж помістилися
+        # EN: The table height is slightly smaller than the tab height so that the header and button also fit
+        
         st.dataframe(
             df.sort_values("Order Date", ascending=False),
             use_container_width=True,
