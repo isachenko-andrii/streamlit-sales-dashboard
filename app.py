@@ -404,7 +404,7 @@ st.markdown(
     <style>
     .author-badge {{
         position: fixed;
-        bottom: 45px;
+        bottom: 50px;
         right: 18px;
         background: rgba(255, 255, 255, 0.9);
         border: 1px solid rgba(0, 0, 0, 0.1);
