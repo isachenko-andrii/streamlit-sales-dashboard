@@ -96,13 +96,15 @@ st.markdown(
     }}
 
     /* заголовок + подпись — липнут к самому верху */
-    .dashboard-header {{
-        position: sticky;
-        top: 0;
-        background: {bg_color};
-        z-index: 999;
-        padding-bottom: 0.3rem;
-    }}
+    :root {
+        --stheader-height: 2.875rem;
+    }
+    .dashboard-header {
+        top: var(--stheader-height);   /* прилипает НИЖЕ панели Streamlit */
+    }
+    div[data-testid="stTabs"] > div:first-child {
+        top: calc(var(--stheader-height) + 3.6rem);  /* высота панели + высота заголовка */
+    }
     .dashboard-header h1 {{
         margin-bottom: 0.1rem;
         font-size: 1.9rem;
