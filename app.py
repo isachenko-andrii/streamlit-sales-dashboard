@@ -453,6 +453,7 @@ with tab_breakdown:
                 height=400
             )
             fig_region.update_traces(textinfo="percent+label")
+            fig_region = fix_hover_separator(fig_region)
             st.plotly_chart(fig_region, use_container_width=True)
 
 
