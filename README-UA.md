@@ -72,24 +72,77 @@
 ![Hosting on GitHub](https://github.com/isachenko-andrii/streamlit-sales-dashboard/raw/main/img/ssd_3.png) 
   
 ---  
- 
-## Структура проекту
-
+  
+## Структура проекту  
+  
 **streamlit-sales-dashboard/** — каталог проєкту  
     ├── doc/ — технічне завдання   
     ├── data/ — дані проєкту  
     ├── img/ — збережені графіки та підсумкові таблиці  
     ├── app.py — файл з кодом проэкту  
     ├── requirements.txt — список бібліотек для запуску проєкту  
-    ├── runtime.txt — .версія Python для Streamlit Cloud  
+    ├── runtime.txt — .фіксує версію Python для Streamlit Cloud  
     ├── gitignore - шаблони ігнорування git  
     ├── LICENSE — MIT Ліцензія   
     ├── project-logo.png — обкладинка проекту  
     ├── README-UA.md  — опис проекту українською мовою   
     └── README.md — опис проекту англійською мовою     
   
-## Як використовувати  
+## Як використовувати 
+
+Ознайомитись з функціоналом можно за посиланням  
+
+**Live Demo:** [Sales & Profit Analytics Dashboard](https://sales-and-profit-dashboard.streamlit.app/)  
+
+Для запуску на іншому аккаунті Streamlit Community Cloud потрібно виконати наступні дії:
   
+**Попередні вимоги (Prerequisites)**  
+  
+Перед початком переконайся, що у тебе є:  
+  
+1. **Акаунт на GitHub**, на якому розміщено (або сфорковано) публічний репозиторій із проектом.  
+2. **Акаунт на Streamlit Community Cloud** (авторизація відбувається через GitHub).  
+3. У репозиторії наявні обов'язкові конфігураційні файли:  
+   * `app.py` — головний скрипт додатка.  
+   * `requirements.txt` — список Python-бібліотек та їх версій.  
+   * `runtime.txt` — вказівка версії Python (наприклад, `python-3.11`).  
+  
+---  
+  
+**Покроковий алгоритм розгортання** 
+  
+**Крок 1. Підготовка GitHub-репозиторію**  
+  
+Залежно від того, де знаходиться оригінальний код, оберіть один із двох варіантів:  
+  
+* **Варіант A (Fork):** Якщо проект лежить у чужому/іншому GitHub-акаунті, зайди на сторінку репозиторію та натисни кнопку **Fork** у верхньому правому кутку.  
+Це створить копію проекту у вашому власному GitHub-профілі.  
+* **Варіант B (Transfer / Push):** Якщо ви створюєте новий репозиторій, завантажте туди файли проекту за допомогою Git:  
+
+   <code>```bash  
+  git init  
+  git add .
+  git commit -m "Initial commit for Streamlit Cloud deployment"  
+  git branch -M main  
+  git remote add origin [https://github.com/](https://github.com/)<YOUR_GITHUB_USERNAME>/<REPOSITORY_NAME>.git  
+  git push -u origin main</code>  
+  
+**Крок 2. Авторизація на Streamlit Community Cloud**  
+  
+ - Перейдіть на сайт share.streamlit.io або streamlit.io.  
+ - Натисніть Sign in (або Get started).  
+ - Оберіть спосіб входу Continue with GitHub та авторизуйся під потрібним (новим) акаунтом GitHub.  
+ - Надайте Streamlit необхідні дозволи (OAuth Access) для читання ваших GitHub-репозиторіїв.  
+  
+**Крок 3. Налаштування та деплой додатка (Create App)**  
+  
+У робочому просторі (Workspace) Streamlit Cloud натисніть кнопку New app (або Create app у правому верхньому кутку).  
+У формі, що з'явилася, заповніть наступні поля:  
+ * **Repository:** Оберіть зі списку свій GitHub-репозиторій (наприклад, username/sales-and-profit-dashboard).
+ * **Branch:** Вкажіть основну гілку (зазвичай main або master).
+ * **Main file path:** Вкажіть шлях до головного файлу додатка (наприклад, app.py).
+ * **App URL (за бажанням):** Ви можете задати кастомний субдомен (наприклад, sales-and-profit-dashboard-new).  
+    
 ...  
     
 ## Контакти  
@@ -106,5 +159,6 @@
   
 ---
   
-**Статус проекту:** Виконано. Заплановані вдосконалення: багатомовність, захист доступу паролем 
+**Статус проекту:** Виконано. Заплановані вдосконалення: багатомовність (виконано), захист доступу паролем (виконано окремим проектом)  
 **Ліцензія:** MIT License.  
+  
