@@ -126,7 +126,7 @@ TRANSLATIONS = {
         "segment_label": "Customer segment",
         "filtered_rows": "Filtered rows",
         "of_word": "of",
-        "dashboard_title": "📊 Sales Analytics Dashboard",
+        "dashboard_title": "📊 Sales and Profit Analytics Dashboard",
         "dashboard_caption": (
             "Dataset: Superstore Sales (Kaggle). Use the filters on the left "
             "to change the period, region, category, and customer segment."
