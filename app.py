@@ -502,8 +502,13 @@ with tab_discount:
             color="Category",
             size="Sales",
             opacity=0.6,
-            labels={"Discount": T["discount_label"], "Profit": T["discount_profit_label"]},
-            height=400,
+            labels={
+                "Discount": T["discount_label"],
+                "Profit": T["discount_profit_label"],
+                "Category": T["category_label"],
+                "Sales": T["cat_sales_label"],
+            },
+            height=400
         )
         fig_scatter = fix_hover_separator(fig_scatter)
         st.plotly_chart(fig_scatter, use_container_width=True)
