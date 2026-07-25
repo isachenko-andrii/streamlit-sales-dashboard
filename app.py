@@ -480,6 +480,7 @@ with tab_top:
             labels={"Sub-Category": T["top_subcat_label"], "Profit": T["top_profit_label"]},
             height=400,
         )
+        fig_sub = fix_hover_separator(fig_sub)
         st.plotly_chart(fig_sub, use_container_width=True)
 
         if (sub_data["Profit"] < 0).any():
