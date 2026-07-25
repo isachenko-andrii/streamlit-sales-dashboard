@@ -28,18 +28,6 @@ st.set_page_config(
 
 DATA_PATH = "data/superstore.csv"
 
-def fix_hover_separator(fig):
-    """
-    UA: Замінює '=' на ': ' в автоматично згенерованих hover-підказках Plotly.
-    EN: Replaces '=' with ': ' in Plotly's auto-generated hover tooltips.
-    Застосовується до графіків, де hovertemplate НЕ прописаний вручну.
-    """
-    fig.for_each_trace(
-        lambda t: t.update(hovertemplate=t.hovertemplate.replace("=", ": "))
-        if t.hovertemplate else None
-    )
-    return fig
-
 # ----------------------------------------------------------------------
 # UA: ЗАВАНТАЖЕННЯ І ПІДГОТОВКА ДАНИХ (з кешуванням)
 # EN: DATA LOADING AND PREPARATION (with caching)
