@@ -407,6 +407,7 @@ with tab_trend:
             height=400,
         )
         fig_trend.update_layout(hovermode="x unified", legend_title_text="")
+        fig_trend = fix_hover_separator(fig_trend)
         st.plotly_chart(fig_trend, use_container_width=True)
 
 # --- UA: Таб 3: Розбивка за категоріями та регіонами-----------------------------
