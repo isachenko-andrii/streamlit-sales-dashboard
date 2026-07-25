@@ -504,6 +504,7 @@ with tab_discount:
             labels={"Discount": T["discount_label"], "Profit": T["discount_profit_label"]},
             height=400,
         )
+        fig_scatter = fix_hover_separator(fig_scatter)
         st.plotly_chart(fig_scatter, use_container_width=True)
 
         corr = df["Discount"].corr(df["Profit"])
