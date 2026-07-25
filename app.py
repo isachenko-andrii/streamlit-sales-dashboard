@@ -450,6 +450,7 @@ with tab_breakdown:
                 names="Region",
                 values="Sales",
                 hole=0.45,
+                labels={"Region": T["region_label"], "Sales": T["cat_sales_label"]},
                 height=400
             )
             fig_region.update_traces(textinfo="percent+label")
