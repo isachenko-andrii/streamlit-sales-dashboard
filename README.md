@@ -7,117 +7,119 @@
   
 </div>  
   
-## Опис проєкту  
+## Project description  
   
-Інтерактивний аналітичний дашборд для дослідження продажів, прибутковості та ефективності дисконтної політики роздрібної мережі (Superstore Dataset).  
-
+Interactive analytical dashboard for researching sales, profitability, and effectiveness of a retail chain's discount policy (Superstore Dataset).  
+  
 **Live Demo:** [Sales & Profit Analytics Dashboard](https://sales-and-profit-dashboard.streamlit.app/)  
   
-## Мета проекту  
+## Project goal   
     
-Цей проект створено як **практичну демонстрацію навичок побудови, оптимізації та деплою інтерактивних дата-додатків за допомогою фреймворку [Streamlit.io](https://streamlit.io/)**. 
-Проект показує повний цикл роботи аналітика даних: від первинного аналізу (EDA) та написання модульного Python-коду до автоматизації хостингу веб-додатка в хмарі Streamlit Community Cloud.  
-
----
+This project is designed as a **practical demonstration of skills in building, optimizing, and deploying interactive data applications using the [Streamlit.io](https://streamlit.io/) framework**.  
+The project shows the full cycle of data analytics work: from initial analysis (EDA) and writing modular Python code to automating web application hosting in the Streamlit Community Cloud.  
   
-### Основні можливості:  
-* **Інтерактивна фільтрація:** Діапазон дат, регіони, категорії та сегменти клієнтів з динамічним підрахунком відфільтрованих записів.  
-* **Моніторинг KPI:** Виторг ($), Прибуток ($), Кількість замовлень, Середній чек ($) та Маржинальність (%).  
-* **Аналітичні блоки:**  
-  * Динаміка продажів та прибутку по місяцях (Plotly Line Chart).  
-  * Аналіз продажів за категоріями та регіонами (Bar Chart + Donut Chart).  
-  * Ранжування Топ-10 підкатегорій з автоматичним виявленням збиткових позицій.  
-  * Scatter Plot залежності прибутку від знижки з підрахунком кореляції Пірсона.  
-* **Експорт даних:** Перегляд інтерактивної таблиці та вивантаження відфільтрованого зрізу в CSV.  
+---  
   
----
-
-## Технологічний стек
-
-* **Мова програмування:** Python 3.11
-* **Фреймворк веб-додатку:** Streamlit
-* **Обробка та аналіз даних:** Pandas, NumPy
-* **Інтерактивна візуалізація:** Plotly Express
-* **Версіонування та деплой:** Git, GitHub, Streamlit Community Cloud
-
----
-
-## Етапи реалізації проекту
-
-Розробка проекту проходила у 3 ключові етапи:
-
-### Етап 1: Написання коду та аналітична розробка (`app.py`)  
+### Main features:  
   
-1. **Підготовка даних:** Очищення та приведення типів (конвертація дат, розрахунок агрегованих полів `Month`, `Delivery Days`).  
-2. **Оптимізація швидкодії:** Застосування кешування Streamlit (`@st.cache_data`) для миттєвого завантаження даних при роботі з фільтрами.  
-3. **Побудова UI/UX:** Створення зручної бічної панелі (Sidebar) з мультиселектами та індикаторами стану.  
-4. **Інтеграція Plotly:** Налаштування кастомних кольорових шкал (`RdYlGn`), інтерактивних підказок та адаптивного розміру графіків.
+* **Interactive filtering:** Date range, regions, categories and customer segments with dynamic counting of filtered records.  
+* **KPI monitoring:** Revenue ($), Profit ($), Number of orders, Average check ($) and Marginality (%).  
+* **Analytical blocks:**  
+* Sales and profit dynamics by month (Plotly Line Chart).  
+* Sales analysis by category and region (Bar Chart + Donut Chart).  
+* Ranking of Top 10 subcategories with automatic detection of unprofitable positions.  
+* Scatter Plot of profit dependence on discount with calculation of Pearson correlation.  
+* **Data export:** View interactive table and download filtered slice to CSV.  
+* **(UPD: Multilingual)**  
+  
+---  
+  
+## Technology Stack  
+  
+* **Programming Language:** Python 3.11  
+* **Web Application Framework:** Streamlit  
+* **Data Processing and Analysis:** Pandas, NumPy  
+* **Interactive Visualization:** Plotly Express  
+* **Versioning and Deployment:** Git, GitHub, Streamlit Community Cloud  
+  
+---  
 
+## Project Implementation Stages  
+  
+The project development took place in 3 key stages:  
+  
+### Stage 1: Code Writing and Analytical Development (`app.py`)  
+  
+1. **Data preparation:** Cleaning and type conversion (date conversion, calculation of aggregated fields `Month`, `Delivery Days`).  
+2. **Performance optimization:** Using Streamlit caching (`@st.cache_data`) for instant data loading when working with filters.  
+3. **UI/UX construction:** Creating a convenient sidebar with multiselects and status indicators.  
+4. **Plotly integration:** Setting up custom color scales (`RdYlGn`), interactive tooltips, and adaptive chart size.  
+  
 ![Writing code](https://github.com/isachenko-andrii/streamlit-sales-dashboard/raw/main/img/ssd_1.png)  
   
-### Етап 2: Версіонування та розміщення на GitHub  
+### Stage 2: Versioning and hosting on GitHub  
   
-1. Структуризація проекту (виділення папки `data/`, файлу залежностей `requirements.txt` та фіксація версії Python у `runtime.txt`).  
-2. Створення Git-репозиторію та публікація коду на GitHub.  
-3. Документування проекту у файлі `README.md`.  
-  
+1. Structuring the project (allocating the `data/` folder, the `requirements.txt` dependency file, and setting the Python version in `runtime.txt`).  
+2. Creating a Git repository and publishing the code on GitHub.  
+3. Documenting the project in the `README.md` file.
+   
 ![Publishing on Streamlit](https://github.com/isachenko-andrii/streamlit-sales-dashboard/raw/main/img/ssd_2.png)  
   
-### Етап 3: Публікація та деплой на Streamlit.io
+### Stage 3: Publishing and deploying on Streamlit.io  
   
-1. Підключення GitHub-репозиторію до платформи **Streamlit Community Cloud**.  
-2. Налаштування автоматичного деплою (CI/CD): додаток автоматично оновлюється при кожному новому комміті в гілку `main`.  
-3. Перевірка стабільності роботи та коректності відображення візуалізацій у хмарі.  
-
+1. Connecting the GitHub repository to the **Streamlit Community Cloud** platform.  
+2. Setting up automatic deployment (CI/CD): the application is automatically updated with each new commit to the `main` branch.  
+3. Checking the stability of the operation and the correctness of the visualizations displayed in the cloud.  
+  
 ![Hosting on GitHub](https://github.com/isachenko-andrii/streamlit-sales-dashboard/raw/main/img/ssd_3.png) 
   
 ---  
   
-## Структура проекту  
+## Project structure  
   
-**streamlit-sales-dashboard/** — каталог проєкту    
-    ├── data/ — дані проєкту  
-    ├── img/ — збережені графіки та підсумкові таблиці  
-    ├── app.py — файл з кодом проэкту  
-    ├── requirements.txt — список бібліотек для запуску проєкту  
-    ├── runtime.txt — .фіксує версію Python для Streamlit Cloud  
-    ├── gitignore - шаблони ігнорування git  
-    ├── LICENSE — MIT Ліцензія   
-    ├── project-logo.png — обкладинка проекту  
-    ├── README-UA.md  — опис проекту українською мовою   
-    └── README.md — опис проекту англійською мовою     
+**streamlit-sales-dashboard/** — project directory  
+├── data/ — project data  
+├── img/ — saved graphs and summary tables  
+├── app.py — file with project code  
+├── requirements.txt — list of libraries to run the project  
+├── runtime.txt — .fixes the Python version for Streamlit Cloud  
+├── gitignore - git ignore templates  
+├── LICENSE — MIT License  
+├── project-logo.png — project cover  
+├── README-UA.md — project description in Ukrainian  
+└── README.md — project description in English  
   
-## Як використовувати 
-
-Ознайомитись з функціоналом можно за посиланням  
-
+## How to use  
+  
+You can familiarize yourself with the functionality at the link  
+  
 **Live Demo:** [Sales & Profit Analytics Dashboard](https://sales-and-profit-dashboard.streamlit.app/)  
-
-Для запуску на іншому аккаунті Streamlit Community Cloud потрібно виконати наступні дії:
   
-**Попередні вимоги (Prerequisites)**  
+To run on another Streamlit Community Cloud account, you need to perform the following steps:  
   
-Перед початком переконайся, що у тебе є:  
+**Prerequisites**  
   
-1. **Акаунт на GitHub**, на якому розміщено (або сфорковано) публічний репозиторій із проектом.  
-2. **Акаунт на Streamlit Community Cloud** (авторизація відбувається через GitHub).  
-3. У репозиторії наявні обов'язкові конфігураційні файли:  
-   * `app.py` — головний скрипт додатка.  
-   * `requirements.txt` — список Python-бібліотек та їх версій.  
-   * `runtime.txt` — вказівка версії Python (наприклад, `python-3.11`).  
+Before you start, make sure you have:  
   
----  
+1. **A GitHub account** on which a public repository with the project is hosted (or forked).  
+2. **A Streamlit Community Cloud account** (authorization is done via GitHub).  
+3. The repository contains mandatory configuration files:  
+* `app.py` — the main script of the application.  
+* `requirements.txt` — a list of Python libraries and their versions.  
+* `runtime.txt` — an indication of the Python version (for example, `python-3.11`).
   
-**Покроковий алгоритм розгортання** 
+---   
   
-**Крок 1. Підготовка GitHub-репозиторію**  
+**Step-by-step deployment algorithm**  
   
-Залежно від того, де знаходиться оригінальний код, оберіть один із двох варіантів:  
+**Step 1. Prepare the GitHub repository**  
   
-* **Варіант A (Fork):** Якщо проект лежить у чужому/іншому GitHub-акаунті, зайди на сторінку репозиторію та натисни кнопку **Fork** у верхньому правому кутку.  
-Це створить копію проекту у вашому власному GitHub-профілі.  
-* **Варіант B (Transfer / Push):** Якщо ви створюєте новий репозиторій, завантажте туди файли проекту за допомогою Git:  
-
+Depending on where the original code is located, choose one of two options:  
+  
+* **Option A (Fork):** If the project is in someone else's/different GitHub account, go to the repository page and click the **Fork** button in the upper right corner.  
+This will create a copy of the project in your own GitHub profile.  
+* **Option B (Transfer / Push):** If you are creating a new repository, upload the project files there using Git:  
+  
    <code>```bash  
   git init  
   git add .
@@ -126,42 +128,43 @@
   git remote add origin [https://github.com/](https://github.com/)<YOUR_GITHUB_USERNAME>/<REPOSITORY_NAME>.git  
   git push -u origin main</code>  
   
-**Крок 2. Авторизація на Streamlit Community Cloud**  
+**Step 2. Authorization on Streamlit Community Cloud**  
   
- - Перейдіть на сайт share.streamlit.io або streamlit.io.  
- - Натисніть Sign in (або Get started).  
- - Оберіть спосіб входу Continue with GitHub та авторизуйся під потрібним (новим) акаунтом GitHub.  
- - Надайте Streamlit необхідні дозволи (OAuth Access) для читання ваших GitHub-репозиторіїв.  
+- Go to share.streamlit.io or streamlit.io.  
+- Click Sign in (or Get started).  
+- Choose the Continue with GitHub login method and authorize with the desired (new) GitHub account.  
+- Grant Streamlit the necessary permissions (OAuth Access) to read your GitHub repositories.  
   
-**Крок 3. Налаштування та деплой додатка (Create App)**  
+**Step 3. Configure and deploy the application (Create App)**  
   
-У робочому просторі (Workspace) Streamlit Cloud натисніть кнопку New app (або Create app у правому верхньому кутку).  
-У формі, що з'явилася, заповніть наступні поля:  
- * **Repository:** Оберіть зі списку свій GitHub-репозиторій (наприклад, username/sales-and-profit-dashboard).
- * **Branch:** Вкажіть основну гілку (зазвичай main або master).
- * **Main file path:** Вкажіть шлях до головного файлу додатка (наприклад, app.py).
- * **App URL (за бажанням):** Ви можете задати кастомний субдомен (наприклад, sales-and-profit-dashboard-new).  
+In the Streamlit Cloud workspace (Workspace), click the New app button (or Create app in the upper right corner).  
+In the form that appears, fill in the following fields:  
+  
+* **Repository:** Select your GitHub repository from the list (for example, username/sales-and-profit-dashboard).  
+* **Branch:** Specify the main branch (usually main or master).  
+* **Main file path:** Specify the path to the main application file (for example, app.py).  
+* **App URL (optional):** You can specify a custom subdomain (e.g. sales-and-profit-dashboard-new).  
+  
+**Automatic Updates (CI/CD)**  
+  
+Streamlit Community Cloud supports automatic updates. When you make any changes to the code and push to the main branch on GitHub (git push origin main), the dashboard will be updated in the cloud automatically within 1-2 minutes.  
 
-**Автоматичне оновлення (CI/CD)**
-
-Streamlit Community Cloud підтримує автоматичне оновлення. При внесенні будь-яких змін у код та виконанні push у гілку main на GitHub (git push origin main), дашборд оновиться в хмарі автоматично протягом 1-2 хвилин.  
+---  
+    
+## Contacts  
   
-...  
-    
-## Контакти  
-    
-**Автор:** [Andrii Isachenko](https://isachenko-andrii.github.io)    
-**Посада:** Junior Data Analyst  
+**Author:** [Andrii Isachenko](https://isachenko-andrii.github.io)  
+**Position:** Junior Data Analyst  
 **LinkedIn:** [Andrii Isachenko](https://www.linkedin.com/in/isachenko-andrii/)  
-**E-mail:** andrii.isachenko@gmail.com   
+**E-mail:** andrii.isachenko@gmail.com  
   
-## Подяки    
+## Acknowledgements  
   
- * Дякую [Kaggle](https://www.kaggle.com/datasets/vivek468/superstore-dataset-final) за надання відкритого навчального датасета Superstore Sales, який є чудовою базою для відпрацювання навичок дослідницького аналізу даних (EDA) та бізнес-моделювання.  
- * Особлива подяка [Streamlit.io](https://streamlit.io/) за створення потужного, інтуїтивно зрозумілого open-source фреймворку та надання безкоштовної хмарної платформи Streamlit Community Cloud, що дозволяє швидко перетворювати Python-скрипти на повноцінні інтерактивні веб-додатки.  
+* Thanks to [Kaggle](https://www.kaggle.com/datasets/vivek468/superstore-dataset-final) for providing the open training dataset Superstore Sales, which is an excellent base for practicing exploratory data analysis (EDA) and business modeling skills.  
+* Special thanks to [Streamlit.io](https://streamlit.io/) for creating a powerful, intuitive open-source framework and providing a free cloud platform Streamlit Community Cloud, which allows you to quickly turn Python scripts into full-fledged interactive web applications.  
   
----
+---  
   
-**Статус проекту:** Виконано. Заплановані вдосконалення: багатомовність (**UPD** виконано), захист доступу паролем (**UPD** виконано окремим проектом)  
-**Ліцензія:** MIT License.  
+**Project status:** Completed. Planned improvements: multilingual (**UPD** completed), password protection (**UPD** completed as a separate project)  
+**License:** MIT License.  
   
