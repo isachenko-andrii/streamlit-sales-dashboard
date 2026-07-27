@@ -152,6 +152,37 @@ Streamlit Community Cloud supports automatic updates. When you make any changes 
 **UPD !!!It is important due to the presence of limits in the free version of Streamlit Community Cloud hosting, a lightweight superstore.csv dataset was used to demonstrate the functionality of the dashboard**
 **the full version can be downloaded on Kaggle at the link: https://www.kaggle.com/datasets/vivek468/superstore-dataset-final**
 **for full use just replace the lightweight superstore.csv file with the full one**  
+
+
+**Screenshots of dashboard functionality:**  
+  
+ - **Key performance indicators**
+   
+![Key Performance Indicators](https://github.com/isachenko-andrii/streamlit-sales-dashboard/raw/main/img/screenshots/ssd_1s.png)
+
+ - **Sales and profit dynamics by month**  
+  
+![Monthly Sales and Profit Trend](https://github.com/isachenko-andrii/streamlit-sales-dashboard/raw/main/img/screenshots/ssd_2s.png)  
+  
+ - **Sales by category and region**  
+  
+![Category and Region](https://github.com/isachenko-andrii/streamlit-sales-dashboard/raw/main/img/screenshots/ssd_3s.png)  
+
+ - **Top 10 subcategories by revenue**  
+  
+![Top 10 Sub-Categories by Profit](https://github.com/isachenko-andrii/streamlit-sales-dashboard/raw/main/img/screenshots/ssd_4s.png)  
+
+ - **The impact of discount on profit**   
+  
+![Discount Impact on Profit](https://github.com/isachenko-andrii/streamlit-sales-dashboard/raw/main/img/screenshots/ssd_5s.png)  
+  
+ - **Detailed data**  
+
+![Detailed Data](https://github.com/isachenko-andrii/streamlit-sales-dashboard/raw/main/img/screenshots/ssd_6s.png)  
+  
+ - **Filters**    
+  
+![Filters](https://github.com/isachenko-andrii/streamlit-sales-dashboard/raw/main/img/screenshots/ssd_7s.png)  
   
 ---  
     
