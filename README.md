@@ -201,5 +201,6 @@ Streamlit Community Cloud supports automatic updates. When you make any changes 
 ---  
   
 **Project status:** Completed. Planned improvements: multilingual (**UPD** completed), password protection (**UPD** completed as a separate project)  
+  
 **License:** MIT License.  
   
