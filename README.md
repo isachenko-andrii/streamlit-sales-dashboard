@@ -148,7 +148,11 @@ In the form that appears, fill in the following fields:
 **Automatic Updates (CI/CD)**  
   
 Streamlit Community Cloud supports automatic updates. When you make any changes to the code and push to the main branch on GitHub (git push origin main), the dashboard will be updated in the cloud automatically within 1-2 minutes.  
-
+  
+**UPD !!!It is important due to the presence of limits in the free version of Streamlit Community Cloud hosting, a lightweight superstore.csv dataset was used to demonstrate the functionality of the dashboard**
+**the full version can be downloaded on Kaggle at the link: https://www.kaggle.com/datasets/vivek468/superstore-dataset-final**
+**for full use just replace the lightweight superstore.csv file with the full one**  
+  
 ---  
     
 ## Contacts  
