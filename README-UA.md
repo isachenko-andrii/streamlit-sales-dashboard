@@ -150,6 +150,35 @@ Streamlit Community Cloud підтримує автоматичне оновле
 **UPD !!!Важливо у св'язку з наявністю лімітів у безкоштовній версії хостінгу Streamlit Community Cloud за для демонстаці працездатності дашборду використано облегшений датасет superstore.csv**   
 **повну версію можна завантажити на Kaggle за посиланням: https://www.kaggle.com/datasets/vivek468/superstore-dataset-final**  
 **для повноцінного використання просто заменіть полегшений файл superstore.csv на повний**  
+
+**Скріншоти функціональних можливостей дашборда:**  
+  
+ - **Ключові показники ефективності**
+![Key Performance Indicators](https://github.com/isachenko-andrii/streamlit-sales-dashboard/raw/main/img/screenshots/ssd_1s.png)
+
+ - **Динаміка продажу та прибутку по місяцях**  
+  
+![Monthly Sales and Profit Trend](https://github.com/isachenko-andrii/streamlit-sales-dashboard/raw/main/img/screenshots/ssd_2s.png)  
+  
+ - Продажі за категоріями та регіонами  
+  
+![Category and Region](https://github.com/isachenko-andrii/streamlit-sales-dashboard/raw/main/img/screenshots/ssd_3s.png)  
+
+ - Топ-10 підкатегорій за прибутком
+
+![Top 10 Sub-Categories by Profit](https://github.com/isachenko-andrii/streamlit-sales-dashboard/raw/main/img/screenshots/ssd_4s.png)  
+
+ - Вплив знижки на прибуток  
+  
+![Discount Impact on Profit](https://github.com/isachenko-andrii/streamlit-sales-dashboard/raw/main/img/screenshots/ssd_5s.png)  
+  
+ - Детальні дані
+
+![Detailed Data](https://github.com/isachenko-andrii/streamlit-sales-dashboard/raw/main/img/screenshots/ssd_6s.png)  
+  
+ - Робота фільтрів  
+  
+![Filters](https://github.com/isachenko-andrii/streamlit-sales-dashboard/raw/main/img/screenshots/ssd_7s.png)  
   
 ---  
     
